@@ -24,17 +24,17 @@ public class Day01 {
         Pattern pattern = Pattern.compile("[1-9]", Pattern.CASE_INSENSITIVE);
 
         Matcher matcher = pattern.matcher(s);
-        if(!matcher.find()){
+        if (!matcher.find()) {
             return 0;
         }
         char first = s.charAt(matcher.start());
         char last = first;
         while (matcher.find()) {
-            last = s.charAt(matcher.end()-1);
+            last = s.charAt(matcher.end() - 1);
         }
         Integer result = Integer.parseInt(String.format("%s%s", first, last));
 
-        if(printOutput) {
+        if (printOutput) {
             System.out.printf("Input: %s, First: %s, Last: %s, Result: %s\n", s, first, last, result);
         }
         return result;
@@ -44,7 +44,7 @@ public class Day01 {
         Pattern pattern = Pattern.compile("(?=(one|two|three|four|five|six|seven|eight|nine)).|([1-9])", Pattern.CASE_INSENSITIVE);
 
         Matcher matcher = pattern.matcher(s);
-        if(!matcher.find()){
+        if (!matcher.find()) {
             return 0;
         }
         Integer first = buildIntegerFromStringAndIndexes(matcher, 1, 2);
@@ -55,7 +55,7 @@ public class Day01 {
 
         Integer result = Integer.parseInt(String.format("%s%s", first, last));
 
-        if(printOutput) {
+        if (printOutput) {
             System.out.printf("Input: %s, First: %s, Last: %s, Result: %s\n", s, first, last, result);
         }
         return result;
@@ -102,6 +102,7 @@ public class Day01 {
     public static Integer solvePart2() throws Exception {
         return solvePart2(false);
     }
+
     public static Integer solvePart2(boolean printOutput) throws Exception {
         init(printOutput);
         Optional<Integer> sum = sonar.stream()
