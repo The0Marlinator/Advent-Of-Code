@@ -9,4 +9,12 @@ repositories {
     mavenCentral()
 }
 
-dependencies { }
+dependencies {}
+
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'aoc.AdventOfCode2022Solutions'
+        )
+    }
+}
