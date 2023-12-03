@@ -17,13 +17,14 @@ jobs:
         java-version: '11'
         distribution: 'adopt'
 
-    - name: Make gradlew executable
-      run: chmod +x ./gradlew
+    - name: Install Gradle
+      uses: gradle/gradle-build-action@v2
 
     - name: Initialize Gradle Wrapper
-      uses: gradle/gradle-build-action@v2
-      with:
-        arguments: wrapper
+      run: gradle wrapper
+
+    - name: Make gradlew executable
+      run: chmod +x ./gradlew
 
     - name: Build with Gradle
       run: ./gradlew build
