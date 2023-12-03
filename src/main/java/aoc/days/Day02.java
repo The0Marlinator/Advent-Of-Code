@@ -14,11 +14,11 @@ public class Day02 {
         put(Color.BLUE, 14);
     }};
     private static boolean printOutput = false;
-    private static List<String> sonar;
+    private static List<String> rows;
 
     private static void init(boolean printOutputParam) throws Exception {
         printOutput = printOutputParam;
-        sonar = AocUtil.readFileToStrings(DAY_INPUT_FILE);
+        rows = AocUtil.readFileToStrings(DAY_INPUT_FILE);
     }
 
     private static HashMap<Color, Integer> getCubeColorCountsFromGame(String game) {
@@ -89,7 +89,7 @@ public class Day02 {
 
     public static Integer solvePart1(boolean printOutput) throws Exception {
         init(printOutput);
-        return sonar.stream()
+        return rows.stream()
                 .map(Day02::getIdIfPossibleOr0)
                 .reduce(Integer::sum)
                 .orElseThrow(() -> new Exception("No Result Obtained"));
@@ -107,7 +107,7 @@ public class Day02 {
 
     public static Integer solvePart2(boolean printOutput) throws Exception {
         init(printOutput);
-        return sonar.stream()
+        return rows.stream()
                 .map(Day02::getCubeColorCountsFromGame)
                 .map(Day02::multiplyCubesTogether)
                 .reduce(Integer::sum)
