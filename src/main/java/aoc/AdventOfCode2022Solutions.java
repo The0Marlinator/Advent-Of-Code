@@ -20,6 +20,7 @@ public class AdventOfCode2022Solutions {
         System.out.println(" > Solution 2 to day 01: " + Day01.solvePart2());
         System.out.println(" > Solution 1 to day 02: " + Day02.solvePart1());
         System.out.println(" > Solution 2 to day 02: " + Day02.solvePart2());
-        System.out.println(" > Solution 1 to day 03: " + Day03.solvePart1(true));
+        System.out.println(" > Solution 1 to day 03: " + Day03.solvePart1());
+        System.out.println(" > Solution 2 to day 03: " + Day03.solvePart2());
     }
 }

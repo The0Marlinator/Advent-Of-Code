@@ -2,8 +2,11 @@ package aoc.days;
 
 import aoc.util.AocUtil;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class Day03 {
 
@@ -16,10 +19,8 @@ public class Day03 {
         sonar = AocUtil.readFileToStrings(DAY_INPUT_FILE);
     }
 
-    private static Integer findIntegers() {
-        List<Integer> integerIndexes = new ArrayList<>();
-
-        Integer totalSum = 0;
+    private static List<List<List<Integer>>> findIntegers(Predicate<Character> condition) {
+        List<List<List<Integer>>> integerIndexes = new ArrayList<>();
 
         boolean isParsingNumber = false;
         for (int rowIndex = 0; rowIndex < sonar.size(); rowIndex++) {
@@ -27,38 +28,29 @@ public class Day03 {
             List<Integer> IdList = new ArrayList<>();
             ArrayList<List<Integer>> row = new ArrayList<>();
             for (int i = 0; i < s.length(); i++) {
-                if (isNumeric(s.charAt(i)) && isParsingNumber) {
+                if (condition.test(s.charAt(i)) && isParsingNumber) {
                     IdList.add(i);
-                } else if (isNumeric(s.charAt(i)) && !isParsingNumber) {
+                } else if (condition.test(s.charAt(i)) && !isParsingNumber) {
                     IdList.add(i);
                     isParsingNumber = true;
-                } else if (!isNumeric(s.charAt(i)) && isParsingNumber) {
+                } else if (!condition.test(s.charAt(i)) && isParsingNumber) {
                     isParsingNumber = false;
                     row.add(IdList);
 
                     IdList = new ArrayList<>();
                 }
             }
-
-            int finalRowIndex = rowIndex;
-            List<Integer> numbers = GetIndexesBorderingSymbol(row, rowIndex)
-                    .stream()
-                    .map((List<Integer> number) -> Day03.buildNumberFromIntegerList(number, finalRowIndex))
-                    .toList();
-
-            Integer sum = numbers.stream()
-                    .reduce(Integer::sum)
-                    .orElse(0);
-
-            totalSum += sum;
-
-            if (printOutput) {
-                System.out.printf("input: %s : Integers: %s : Row Sum: %s : Total: %s\n", s, numbers, sum, totalSum);
+            if (isParsingNumber) {
+                row.add(IdList);
             }
 
-            integerIndexes.addAll(numbers);
+            if (printOutput) {
+                System.out.printf("input: %s : row: %s \n", s, row);
+            }
+
+            integerIndexes.add(row);
         }
-        return totalSum;
+        return integerIndexes;
     }
 
     private static boolean isNumeric(char value) {
@@ -118,25 +110,6 @@ public class Day03 {
         return result;
     }
 
-    public static Integer solvePart1() throws Exception {
-        return solvePart1(false);
-    }
-
-    public static Integer solvePart1(boolean printOutput) throws Exception {
-        init(printOutput);
-        return findIntegers();
-
-    }
-
-    public static Integer solvePart2() throws Exception {
-        return solvePart2(false);
-    }
-
-    public static Integer solvePart2(boolean printOutput) throws Exception {
-        init(printOutput);
-        return 0;
-    }
-
     private static boolean borderingPLacesHaveSymbol(int xIndex, int yIndex) {
         return hasSymbol(xIndex - 1, yIndex)
                 || hasSymbol(xIndex, yIndex - 1)
@@ -152,5 +125,96 @@ public class Day03 {
 
     private static boolean hasSymbol(int xIndex, int yIndex) {
         return isIndexOnGrid(xIndex, yIndex) && !isNumeric(sonar.get(yIndex).charAt(xIndex)) && !(sonar.get(yIndex).charAt(xIndex) == '.');
+    }
+
+    private static List<List<Integer>> borderingPlacesHaveNumbers(List<List<List<Integer>>> starLocations) {
+
+        List<List<List<Integer>>> numberLocations = findIntegers(Day03::isNumeric);
+
+        List<List<Integer>> numbersDajacentToStar = new ArrayList<>();
+
+        for (int star_y = 0; star_y < starLocations.size(); ++star_y) {
+            for (int star_x = 0; star_x < starLocations.get(star_y).size(); ++star_x) {
+
+                List<Integer> adjacentNumbers = new ArrayList<>();
+                int star_x_actual = starLocations.get(star_y).get(star_x).get(0);
+
+                if (star_y - 1 >= 0) {
+                    for (List<Integer> numberIndeciesOnRow : numberLocations.get(star_y - 1)) {
+                        if (!adjacentNumbers.contains(buildNumberFromIntegerList(numberIndeciesOnRow, star_y - 1)) && (numberIndeciesOnRow.contains(star_x_actual - 1) || numberIndeciesOnRow.contains(star_x_actual) || numberIndeciesOnRow.contains(star_x_actual + 1))) {
+                            adjacentNumbers.add(buildNumberFromIntegerList(numberIndeciesOnRow, star_y - 1));
+                        }
+
+
+                    }
+                }
+
+                for (List<Integer> numberIndeciesOnRow : numberLocations.get(star_y)) {
+                    if (!adjacentNumbers.contains(buildNumberFromIntegerList(numberIndeciesOnRow, star_y)) && (numberIndeciesOnRow.contains(star_x_actual - 1) || numberIndeciesOnRow.contains(star_x_actual) || numberIndeciesOnRow.contains(star_x_actual + 1))) {
+                        adjacentNumbers.add(buildNumberFromIntegerList(numberIndeciesOnRow, star_y));
+                    }
+                }
+
+                if (star_y + 1 < sonar.size()) {
+                    for (List<Integer> numberIndeciesOnRow : numberLocations.get(star_y + 1)) {
+                        if (!adjacentNumbers.contains(buildNumberFromIntegerList(numberIndeciesOnRow, star_y + 1)) && (numberIndeciesOnRow.contains(star_x_actual - 1) || numberIndeciesOnRow.contains(star_x_actual) || numberIndeciesOnRow.contains(star_x_actual + 1))) {
+                            adjacentNumbers.add(buildNumberFromIntegerList(numberIndeciesOnRow, star_y + 1));
+                        }
+                    }
+                }
+                numbersDajacentToStar.add(adjacentNumbers);
+            }
+        }
+        return numbersDajacentToStar;
+    }
+
+    public static Integer solvePart1() throws Exception {
+        return solvePart1(false);
+    }
+
+    public static Integer solvePart1(boolean printOutput) throws Exception {
+        init(printOutput);
+        List<List<List<Integer>>> rows = findIntegers(Day03::isNumeric);
+
+        Integer totalSum = 0;
+
+        for (int row_index = 0; row_index < rows.size(); ++row_index) {
+
+            List<List<Integer>> row = rows.get(row_index);
+
+            int finalRow_index = row_index;
+            List<Integer> numbers = GetIndexesBorderingSymbol(row, row_index)
+                    .stream()
+                    .map((List<Integer> number) -> Day03.buildNumberFromIntegerList(number, finalRow_index))
+                    .toList();
+
+            Integer sum = numbers.stream()
+                    .reduce(Integer::sum)
+                    .orElse(0);
+
+            totalSum += sum;
+        }
+
+        return totalSum;
+    }
+
+    public static BigInteger solvePart2() throws Exception {
+        return solvePart2(false);
+    }
+
+    public static BigInteger solvePart2(boolean printOutput) throws Exception {
+        init(printOutput);
+
+        List<List<List<Integer>>> stars = findIntegers((Character c) -> c == '*');
+
+        if (printOutput) {
+            System.out.printf("Found numbers: %s \n", borderingPlacesHaveNumbers(stars).stream()
+                    .filter(integers -> integers.size() == 2).collect(Collectors.toList()));
+        }
+        return borderingPlacesHaveNumbers(stars).stream()
+                .filter(integers -> integers.size() == 2)
+                .map(integers -> integers.stream().map(BigInteger::valueOf).reduce(BigInteger::multiply).orElse(BigInteger.ZERO))
+                .reduce(BigInteger::add)
+                .orElse(BigInteger.ZERO);
     }
 }
