@@ -144,8 +144,6 @@ public class Day03 {
                         if (!adjacentNumbers.contains(buildNumberFromIntegerList(numberIndeciesOnRow, star_y - 1)) && (numberIndeciesOnRow.contains(star_x_actual - 1) || numberIndeciesOnRow.contains(star_x_actual) || numberIndeciesOnRow.contains(star_x_actual + 1))) {
                             adjacentNumbers.add(buildNumberFromIntegerList(numberIndeciesOnRow, star_y - 1));
                         }
-
-
                     }
                 }
 
