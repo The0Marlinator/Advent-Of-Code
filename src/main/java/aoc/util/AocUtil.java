@@ -1,14 +1,10 @@
 package aoc.util;
 
-import java.io.FileNotFoundException;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public final class AocUtil {
     private AocUtil() {
@@ -16,26 +12,14 @@ public final class AocUtil {
     }
 
     public static List<String> readFileToStrings(final String filename) throws Exception {
-        Path path = readFile(filename);
 
-        try (final Stream<String> lines = Files.lines(path)) {
-            return lines.collect(Collectors.toList());
+        try (InputStream is = AocUtil.class.getClassLoader().getResourceAsStream(filename);
+             BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
+
+            return reader.lines().collect(Collectors.toList());
+
+        } catch (Exception e) {
+            throw new RuntimeException("Error reading resource file", e);
         }
-    }
-
-    public static int[] readFileToIntArray(final String filename) throws Exception {
-        Path path = readFile(filename);
-
-        try (final Stream<String> lines = Files.lines(path)) {
-            return lines.mapToInt(Integer::parseInt).toArray();
-        }
-    }
-
-    private static Path readFile(String filename) throws FileNotFoundException, URISyntaxException {
-        URL url = AocUtil.class.getClassLoader().getResource(filename);
-        if (url == null) {
-            throw new FileNotFoundException("Unable to locate file: " + filename);
-        }
-        return Paths.get(url.toURI());
     }
 }
