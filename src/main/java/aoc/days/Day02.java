@@ -1,11 +1,12 @@
 package aoc.days;
 
-import aoc.util.AocUtil;
+import aoc.framework.Day;
+import aoc.framework.DaySolution;
 
 import java.util.HashMap;
-import java.util.List;
 
-public class Day02 {
+@DaySolution(day = 2)
+public class Day02 extends Day {
 
     private static final String DAY_INPUT_FILE = "day02/input.txt";
     private static final HashMap<Color, Integer> CUBE_COUNTS = new HashMap<>() {{
@@ -13,15 +14,33 @@ public class Day02 {
         put(Color.GREEN, 13);
         put(Color.BLUE, 14);
     }};
-    private static boolean printOutput = false;
-    private static List<String> rows;
 
-    private static void init(boolean printOutputParam) throws Exception {
-        printOutput = printOutputParam;
-        rows = AocUtil.readFileToStrings(DAY_INPUT_FILE);
+    private enum Color {RED, GREEN, BLUE}
+
+    public Day02(boolean printOutput) throws RuntimeException {
+        super(printOutput, DAY_INPUT_FILE, 2);
     }
 
-    private static HashMap<Color, Integer> getCubeColorCountsFromGame(String game) {
+    @Override
+    protected String solvePart1() {
+        return parsedInput.stream()
+                .map(this::getIdIfPossibleOr0)
+                .reduce(Integer::sum)
+                .orElseThrow(() -> new RuntimeException("No Result Obtained"))
+                .toString();
+    }
+
+    @Override
+    protected String solvePart2() {
+        return parsedInput.stream()
+                .map(this::getCubeColorCountsFromGame)
+                .map(this::multiplyCubesTogether)
+                .reduce(Integer::sum)
+                .orElseThrow(() -> new RuntimeException("Unable to parse File"))
+                .toString();
+    }
+
+    private HashMap<Color, Integer> getCubeColorCountsFromGame(String game) {
         HashMap<Color, Integer> colorCountHashmap = new HashMap<>();
 
         String[] cubes = game.split("Game \\d.*: |, |; ");
@@ -45,21 +64,19 @@ public class Day02 {
 
         }
 
-        if (printOutput) {
-            System.out.printf("Input: %s, Result: %s\n", game, colorCountHashmap);
-        }
+        printToOutput(String.format("Input: %s, Result: %s %n", game, colorCountHashmap));
 
         return colorCountHashmap;
     }
 
 
-    private static Integer getIdFromGame(String game) {
+    private Integer getIdFromGame(String game) {
         String id = game.split("Game |: ")[1];
         return Integer.parseInt(id);
     }
 
 
-    private static Integer getIdIfPossibleOr0(String game) {
+    private Integer getIdIfPossibleOr0(String game) {
         String[] cubes = game.split("Game \\d.*: |, |; ");
         Integer id = getIdFromGame(game);
 
@@ -83,39 +100,9 @@ public class Day02 {
         return id;
     }
 
-    public static Integer solvePart1() throws Exception {
-        return solvePart1(false);
-    }
-
-    public static Integer solvePart1(boolean printOutput) throws Exception {
-        init(printOutput);
-        return rows.stream()
-                .map(Day02::getIdIfPossibleOr0)
-                .reduce(Integer::sum)
-                .orElseThrow(() -> new Exception("No Result Obtained"));
-    }
-
-    private static Integer multiplyCubesTogether(HashMap<Color, Integer> counts) {
+    private Integer multiplyCubesTogether(HashMap<Color, Integer> counts) {
         return counts.values().stream()
                 .reduce(Math::multiplyExact)
                 .orElse(0);
     }
-
-    public static Integer solvePart2() throws Exception {
-        return solvePart2(false);
-    }
-
-    public static Integer solvePart2(boolean printOutput) throws Exception {
-        init(printOutput);
-        return rows.stream()
-                .map(Day02::getCubeColorCountsFromGame)
-                .map(Day02::multiplyCubesTogether)
-                .reduce(Integer::sum)
-                .orElseThrow(() -> new Exception("Unable to parse File"));
-    }
-
-
-    private enum Color {RED, GREEN, BLUE}
-
-
 }
