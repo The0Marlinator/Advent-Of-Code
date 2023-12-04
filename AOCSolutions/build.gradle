@@ -22,8 +22,24 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter'
 }
 
+// Define a directory for generated sources
+def generatedSourcesDir = "$buildDir/generated/sources/annotationProcessor/java/main"
+
+// Configure source sets to include generated sources
+sourceSets {
+    main {
+        java {
+            srcDir generatedSourcesDir
+        }
+    }
+}
+
+// Ensure that generated sources are available before compilation
 compileJava {
     options.annotationProcessorPath = configurations.annotationProcessor
+    doFirst {
+        file(generatedSourcesDir).mkdirs()
+    }
 }
 test {
     useJUnitPlatform()

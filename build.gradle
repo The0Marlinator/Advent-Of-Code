@@ -21,9 +21,21 @@ java {
 }
 
 jar {
+    from {
+        configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
     manifest {
         attributes(
                 'Main-Class': 'aoc.AdventOfCode2022Solutions'
         )
+    }
+}
+
+// To avoid duplicating files in the JAR
+configurations.runtimeClasspath {
+    resolutionStrategy.eachDependency { details ->
+        if (details.requested.group == 'org.slf4j') {
+            details.useVersion '1.7.32'
+        }
     }
 }
