@@ -1,6 +1,5 @@
 package aoc.framework;
-
-import aoc.util.AocUtil;
+import aoc.framework.util.AocUtil;
 
 import java.util.List;
 

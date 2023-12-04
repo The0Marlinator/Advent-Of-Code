@@ -1,2 +1,5 @@
 rootProject.name = 'AoC-Java-Foundation'
+include 'AOCFramework'
+include 'AOCAnnotationGenerator'
+include 'AOCSolutions'
 

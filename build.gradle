@@ -9,7 +9,10 @@ repositories {
     mavenCentral()
 }
 
-dependencies {}
+dependencies {
+    implementation project(':AOCSolutions')
+    implementation project(':AOCFramework')
+}
 
 java {
     toolchain {

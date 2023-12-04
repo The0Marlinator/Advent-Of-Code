@@ -1,4 +1,4 @@
-package aoc.util;
+package aoc.framework.util;
 
 import java.io.BufferedReader;
 import java.io.InputStream;

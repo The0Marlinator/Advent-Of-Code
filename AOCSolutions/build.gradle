@@ -1,0 +1,30 @@
+plugins {
+    id 'java'
+}
+
+group = 'aoc'
+version = '1.0'
+
+repositories {
+    mavenCentral()
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+dependencies {
+    implementation project(':AOCFramework')
+    annotationProcessor project(':AOCAnnotationGenerator')
+    testImplementation platform('org.junit:junit-bom:5.9.1')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+compileJava {
+    options.annotationProcessorPath = configurations.annotationProcessor
+}
+test {
+    useJUnitPlatform()
+}
