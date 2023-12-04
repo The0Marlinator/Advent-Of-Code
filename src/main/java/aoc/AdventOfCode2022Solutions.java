@@ -21,7 +21,7 @@ public class AdventOfCode2022Solutions {
         System.exit(0);
     }
 
-    private static void solveAll() throws Exception {
+    private static void solveAll() {
         System.out.println("Advent of Code 2022 solutions:");
 
         DaySolutionFactory.createDaySolutions()
