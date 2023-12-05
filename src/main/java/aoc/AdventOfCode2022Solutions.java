@@ -1,14 +1,7 @@
 package aoc;
 
-import aoc.days.Day01;
-import aoc.days.Day02;
-import aoc.days.Day03;
-import aoc.days.Day04;
 import aoc.factory.DaySolutionFactory;
 import aoc.framework.Day;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class AdventOfCode2022Solutions {
 
