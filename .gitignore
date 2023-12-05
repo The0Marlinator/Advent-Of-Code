@@ -32,3 +32,4 @@ Build files
 **/build
 AOCAnnotationGenerator/build/tmp/compileJava/previous-compilation-data.bin
 AOCAnnotationGenerator/build/tmp/compileJava/previous-compilation-data.bin
+*.bin
