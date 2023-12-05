@@ -1,14 +1,6 @@
-### My solutions to the 2023 Adevnt of code
-## BASED ON:
-# AoC-Java-Foundation
-A Java foundation for solving Advent of Code and a complimentary solution to the first day (2021 though!).
+# My solutions to the Advent Of COde
 
-# To solve daily challenges:
-- Add day input text-file in resources folder, e.g. ./resources/day01/input.txt
-- Use AocUtil to read the file; if you need more utility-functions you will have to write them you self.
-- Use Day01.java as a template for each day, e.g. by using naming DayXX.java.
-- Add the DayXX to AdventOfCode2022Solutions and run the main-method.
- 
+Note the actual Solutions are in the AOC Solutions Module (They are annotatedn with the Year and day)
 
-
+The rest is "Framework Code" and a runner which uses the annotations to dtermine which soltion is for which day.
 
