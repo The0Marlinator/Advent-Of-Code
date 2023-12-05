@@ -15,5 +15,5 @@ public class Solution202301 extends Day {
 The annotation processor in the respective module should pick it up when the project is building and it should directly be available.
 
 ## Actions
-There is an action in this repository which will cause github to run and build this projecy on a push or merge
+There is an action in this repository which will cause github to run and build this project on a push or merge.
 
