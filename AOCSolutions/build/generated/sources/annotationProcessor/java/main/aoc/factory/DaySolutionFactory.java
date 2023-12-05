@@ -4,6 +4,7 @@ import aoc.days.Day01;
 import aoc.days.Day02;
 import aoc.days.Day03;
 import aoc.days.Day04;
+import aoc.days.Day05;
 import aoc.framework.Day;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +16,7 @@ public class DaySolutionFactory {
     result.add(new Day02(false));
     result.add(new Day03(false));
     result.add(new Day04(false));
+    result.add(new Day05(false));
     return result;
   }
 }

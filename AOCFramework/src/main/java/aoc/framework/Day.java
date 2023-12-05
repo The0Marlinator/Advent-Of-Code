@@ -7,6 +7,7 @@ public abstract class Day {
 
     private final boolean printOutput;
     protected List<String> parsedInput;
+    protected List<String> splitInput;
     private final int dayOfSolution;
 
     protected Day(boolean printOutput, String filePath, int dayOfSolution) throws RuntimeException {
