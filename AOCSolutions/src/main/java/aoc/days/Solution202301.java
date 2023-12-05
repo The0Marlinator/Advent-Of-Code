@@ -7,13 +7,13 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@DaySolution(day = 1)
-public class Day01 extends Day {
+@DaySolution(year = 2023, day = 1)
+public class Solution202301 extends Day {
 
-    private static final String DAY_INPUT_FILE = "day01/input.txt";
+    private static final String DAY_INPUT_FILE = "202301/input.txt";
 
-    public Day01(boolean printOutput) throws RuntimeException {
-        super(printOutput, DAY_INPUT_FILE, 1);
+    public Solution202301(boolean printOutput) throws RuntimeException {
+        super(printOutput, DAY_INPUT_FILE);
     }
 
     private Integer getDigitFromString(final String s) {
@@ -41,10 +41,10 @@ public class Day01 extends Day {
         if (!matcher.find()) {
             return 0;
         }
-        Integer first = buildIntegerFromStringAndIndexes(matcher, 1, 2);
+        Integer first = buildIntegerFromStringAndIndexes(matcher);
         Integer last = first;
         while (matcher.find()) {
-            last = buildIntegerFromStringAndIndexes(matcher, 1, 2);
+            last = buildIntegerFromStringAndIndexes(matcher);
         }
 
         Integer result = Integer.parseInt(String.format("%s%s", first, last));
@@ -54,12 +54,12 @@ public class Day01 extends Day {
     }
 
 
-    private Integer buildIntegerFromStringAndIndexes(Matcher matcher, int stringGroup, int intGroup) {
-        if (matcher.group(intGroup) != null) {
-            return Integer.parseInt(String.format("%s", matcher.group(intGroup)));
+    private Integer buildIntegerFromStringAndIndexes(Matcher matcher) {
+        if (matcher.group(2) != null) {
+            return Integer.parseInt(String.format("%s", matcher.group(2)));
         }
 
-        return parseIntegerFromWord(matcher.group(stringGroup));
+        return parseIntegerFromWord(matcher.group(1));
 
     }
 
@@ -79,7 +79,7 @@ public class Day01 extends Day {
     }
 
     @Override
-    protected String solvePart1() {
+    public String solvePart1() {
         Optional<Integer> sum = parsedInput.stream()
                 .map(this::getDigitFromString)
                 .reduce(Integer::sum);
@@ -88,7 +88,7 @@ public class Day01 extends Day {
     }
 
     @Override
-    protected String solvePart2() {
+    public String solvePart2() {
 
         Optional<Integer> sum = parsedInput.stream()
                 .map(this::getDigitsAndNUmbersFromString)

@@ -1,10 +1,10 @@
 package aoc.factory;
 
-import aoc.days.Day01;
-import aoc.days.Day02;
-import aoc.days.Day03;
-import aoc.days.Day04;
-import aoc.days.Day05;
+import aoc.days.Solution202301;
+import aoc.days.Solution202302;
+import aoc.days.Solution202303;
+import aoc.days.Solution202304;
+import aoc.days.Solution202305;
 import aoc.framework.Day;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,11 +12,11 @@ import java.util.List;
 public class DaySolutionFactory {
   public static List<? extends Day> createDaySolutions() {
     List<Day> result = new ArrayList<>();
-    result.add(new Day01(false));
-    result.add(new Day02(false));
-    result.add(new Day03(false));
-    result.add(new Day04(false));
-    result.add(new Day05(false));
+    result.add(new Solution202301(false));
+    result.add(new Solution202302(false));
+    result.add(new Solution202303(false));
+    result.add(new Solution202304(false));
+    result.add(new Solution202305(false));
     return result;
   }
 }

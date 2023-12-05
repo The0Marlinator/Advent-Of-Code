@@ -5,24 +5,22 @@ import aoc.framework.DaySolution;
 
 import java.util.HashMap;
 
-@DaySolution(day = 2)
-public class Day02 extends Day {
+@DaySolution(year = 2023, day = 2)
+public class Solution202302 extends Day {
 
-    private static final String DAY_INPUT_FILE = "day02/input.txt";
+    private static final String DAY_INPUT_FILE = "202302/input.txt";
     private static final HashMap<Color, Integer> CUBE_COUNTS = new HashMap<>() {{
         put(Color.RED, 12);
         put(Color.GREEN, 13);
         put(Color.BLUE, 14);
     }};
 
-    private enum Color {RED, GREEN, BLUE}
-
-    public Day02(boolean printOutput) throws RuntimeException {
-        super(printOutput, DAY_INPUT_FILE, 2);
+    public Solution202302(boolean printOutput) throws RuntimeException {
+        super(printOutput, DAY_INPUT_FILE);
     }
 
     @Override
-    protected String solvePart1() {
+    public String solvePart1() {
         return parsedInput.stream()
                 .map(this::getIdIfPossibleOr0)
                 .reduce(Integer::sum)
@@ -31,7 +29,7 @@ public class Day02 extends Day {
     }
 
     @Override
-    protected String solvePart2() {
+    public String solvePart2() {
         return parsedInput.stream()
                 .map(this::getCubeColorCountsFromGame)
                 .map(this::multiplyCubesTogether)
@@ -69,12 +67,10 @@ public class Day02 extends Day {
         return colorCountHashmap;
     }
 
-
     private Integer getIdFromGame(String game) {
         String id = game.split("Game |: ")[1];
         return Integer.parseInt(id);
     }
-
 
     private Integer getIdIfPossibleOr0(String game) {
         String[] cubes = game.split("Game \\d.*: |, |; ");
@@ -105,4 +101,6 @@ public class Day02 extends Day {
                 .reduce(Math::multiplyExact)
                 .orElse(0);
     }
+
+    private enum Color {RED, GREEN, BLUE}
 }

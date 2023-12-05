@@ -8,17 +8,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
-@DaySolution(day = 3)
-public class Day03 extends Day {
+@DaySolution(year = 2023, day = 3)
+public class Solution202303 extends Day {
 
-    private static final String DAY_INPUT_FILE = "day03/input.txt";
+    private static final String DAY_INPUT_FILE = "202303/input.txt";
 
-    public Day03(boolean printOutput) throws RuntimeException {
-        super(printOutput, DAY_INPUT_FILE, 3);
+    public Solution202303(boolean printOutput) throws RuntimeException {
+        super(printOutput, DAY_INPUT_FILE);
     }
 
     @Override
-    protected String solvePart1() {
+    public String solvePart1() {
 
         List<List<List<Integer>>> rows = findIntegers(this::isNumeric);
 
@@ -64,8 +64,7 @@ public class Day03 extends Day {
         List<List<List<Integer>>> integerIndexes = new ArrayList<>();
 
         boolean isParsingNumber = false;
-        for (int rowIndex = 0; rowIndex < parsedInput.size(); rowIndex++) {
-            String s = parsedInput.get(rowIndex);
+        for (String s : parsedInput) {
             List<Integer> idList = new ArrayList<>();
             ArrayList<List<Integer>> row = new ArrayList<>();
             for (int i = 0; i < s.length(); i++) {
@@ -120,11 +119,11 @@ public class Day03 extends Day {
 
     private List<List<Integer>> getIndexesBorderingSymbol(List<List<Integer>> indexes, Integer yIndex) {
         List<List<Integer>> indexesFiltered = new ArrayList<>();
-        for (int currentNumber = 0; currentNumber < indexes.size(); currentNumber++) {
+        for (List<Integer> index : indexes) {
             boolean found = false;
-            for (int xIndexIndex = 0; xIndexIndex < indexes.get(currentNumber).size(); xIndexIndex++) {
-                if (borderingPLacesHaveSymbol(indexes.get(currentNumber).get(xIndexIndex), yIndex) && !found) {
-                    indexesFiltered.add(indexes.get(currentNumber));
+            for (int xIndexIndex = 0; xIndexIndex < index.size(); xIndexIndex++) {
+                if (borderingPLacesHaveSymbol(index.get(xIndexIndex), yIndex) && !found) {
+                    indexesFiltered.add(index);
                     found = true;
                 }
             }
