@@ -24,7 +24,7 @@ public class AdventOfCode2022Solutions {
             System.out.printf("Solutions for %s Advent Of Code %n", year);
             List<? extends Day> days = getAllSolutionsForYear(year);
             for (int i = 0; i < days.size(); i++) {
-                System.out.printf("\t >Day %s %n", i + 1);
+                System.out.printf("\t >Day %s %n", days.get(i).getClass().getAnnotation(DaySolution.class).day());
                 long startTime = System.currentTimeMillis();
                 String solutionPart1 = days.get(i).solvePart1();
                 long endTime = System.currentTimeMillis();

@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 @DaySolution(year = 2023, day = 5)
 public class Solution202305 extends Day {
 
-    private static final String INPUT_FILE_PATH = "202305/input.txt";
+    private static final String INPUT_FILE_PATH = "202305/input_part_1_short.txt";
     private static final String SEEDS = "seeds";
     private static final String SEEDS_TO_SOIL = "seed-to-soil";
     private static final String SOIL_TO_FERTILIZER = "soil-to-fertilizer";
