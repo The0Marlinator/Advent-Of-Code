@@ -5,6 +5,7 @@ import aoc.days.Solution202302;
 import aoc.days.Solution202303;
 import aoc.days.Solution202304;
 import aoc.days.Solution202305;
+import aoc.days.Solution202306;
 import aoc.framework.Day;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,7 @@ public class DaySolutionFactory {
     result.add(new Solution202303(false));
     result.add(new Solution202304(false));
     result.add(new Solution202305(false));
+    result.add(new Solution202306(false));
     return result;
   }
 }
