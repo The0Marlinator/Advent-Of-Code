@@ -1,4 +1,4 @@
-rootProject.name = 'AoC-Java-Foundation'
+rootProject.name = 'Advent Of Code Solutions'
 include 'AOCFramework'
 include 'AOCAnnotationGenerator'
 include 'AOCSolutions'

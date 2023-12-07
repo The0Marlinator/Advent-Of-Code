@@ -31,7 +31,7 @@ public class Solution202305 extends Day {
 
     @Override
     public String solvePart1() {
-        List<Long> seeds = Arrays.stream(parsedInput.get(0).split(":")[1]
+        List<Long> seeds = Arrays.stream(parsedInput.getFirst().split(":")[1]
                         .trim()
                         .split(" "))
                 .map(Long::valueOf)
@@ -44,7 +44,7 @@ public class Solution202305 extends Day {
     @Override
     public String solvePart2() {
 
-        List<Long> seeds = Arrays.stream(parsedInput.get(0).split(":")[1]
+        List<Long> seeds = Arrays.stream(parsedInput.getFirst().split(":")[1]
                         .trim()
                         .split(" "))
                 .map(Long::valueOf)
@@ -75,17 +75,12 @@ public class Solution202305 extends Day {
         for (Pair<Range, Range> map : mapList) {
             List<Range> newUnmapped = new LinkedList<>();
             for (Range unmappedRange : unmapped) {
-                Range overLappingRange = map.first.overlapping(unmappedRange);
+                Range overLappingRange = map.first.getOverlapping(unmappedRange);
                 if (overLappingRange.isEmpty()) {
                     newUnmapped.add(new Range(unmappedRange.getFloor(), unmappedRange.getCeiling()));
                     continue;
                 } else {
-                    if (unmappedRange.getFloor() < overLappingRange.getFloor()) {
-                        newUnmapped.add(new Range(unmappedRange.getFloor(), overLappingRange.getFloor() - 1));
-                    }
-                    if (unmappedRange.getCeiling() > overLappingRange.getCeiling()) {
-                        newUnmapped.add(new Range(overLappingRange.getCeiling() + 1, unmappedRange.getCeiling()));
-                    }
+                    newUnmapped.addAll(unmappedRange.getNonOverlapping(map.first));
                 }
                 printToOutput("Step: " + mapIndex + " input:" + unmappedRange + " overlapping:" + overLappingRange + " source map:" + map.first + " destination map:" + map.second + " mapped:" + mapRangeToRangePair(overLappingRange, map) + " unmapped: " + newUnmapped);
                 smallest = Math.min(smallest, getSmallestLocationFromRange(mapRangeToRangePair(overLappingRange, map), getNextMapIndex(mapIndex)));
@@ -123,18 +118,6 @@ public class Solution202305 extends Day {
     private Long mapFromRange(String mapIndex, Long value) {
         for (Pair<Range, Range> mapping : rangeMapping.get(mapIndex)) {
             if (mapping.first.inRange(value)) {
-                long sourceFloor = mapping.first.getFloor();
-                long destinationFloor = mapping.second.getFloor();
-
-                return Math.abs(sourceFloor - value) + destinationFloor;
-            }
-        }
-        return value;
-    }
-
-    private Long mapFromRangeFlipped(String mapIndex, Long value) {
-        for (Pair<Range, Range> mapping : rangeMapping.get(mapIndex)) {
-            if (mapping.flip().first.inRange(value)) {
                 long sourceFloor = mapping.first.getFloor();
                 long destinationFloor = mapping.second.getFloor();
 

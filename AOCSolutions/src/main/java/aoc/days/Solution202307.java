@@ -17,7 +17,7 @@ public class Solution202307 extends Day {
     private enum HandType {FIVE_OF_A_KIND, FOUR_OF_A_KIND, FULL_HOUSE, THREE_OF_A_KIND, TWO_PAIR, ONE_PAIR, HIGH_CARD}
 
     public Solution202307(boolean printOutput) {
-        super(false, INPUT_FILE);
+        super(printOutput, INPUT_FILE);
     }
 
     @Override
@@ -63,7 +63,7 @@ public class Solution202307 extends Day {
         if (handTypeFirst.equals(handTypeSecond)) {
             return compareHandBasedOnCardValues(first, second, CARDS_PART_2);
         }
-        return (int) (scorehandType(getHandTypeWithJoker(first.getFirst())) - scorehandType(getHandTypeWithJoker(second.getFirst())));
+        return (int) (scoreHandType(getHandTypeWithJoker(first.getFirst())) - scoreHandType(getHandTypeWithJoker(second.getFirst())));
     }
 
     private int compareHands(Pair<List<Character>, Long> first, Pair<List<Character>, Long> second) {
@@ -71,7 +71,7 @@ public class Solution202307 extends Day {
             return compareHandBasedOnCardValues(first, second, CARDS);
 
         }
-        return (int) (scorehandType(getHandType(first.getFirst())) - scorehandType(getHandType(second.getFirst())));
+        return (int) (scoreHandType(getHandType(first.getFirst())) - scoreHandType(getHandType(second.getFirst())));
     }
 
     private Integer compareHandBasedOnCardValues(Pair<List<Character>, Long> first, Pair<List<Character>, Long> second, List<Character> cards) {
@@ -91,21 +91,21 @@ public class Solution202307 extends Day {
 
     private HandType getHandTypeWithJoker(List<Character> cards) {
 
-        char numberDistinct = countOccurences(cards).entrySet().stream()
+        char numberDistinct = countOccurrences(cards).entrySet().stream()
                 .filter(entry -> !entry.getKey().equals('J') )
                 .max(Map.Entry.comparingByValue())
                 .map(Map.Entry::getKey)
                 .orElse('2');
 
 
-        List<Character> upgdradedCards = cards.stream()
+        List<Character> upgradedCards = cards.stream()
                 .map(character -> character.equals('J') ? numberDistinct: character)
                 .toList();
 
-        return getHandType(upgdradedCards);
+        return getHandType(upgradedCards);
     }
 
-    private long scorehandType(HandType handType) {
+    private long scoreHandType(HandType handType) {
         return switch (handType) {
             case FIVE_OF_A_KIND -> 7;
             case FOUR_OF_A_KIND -> 6;
@@ -120,7 +120,7 @@ public class Solution202307 extends Day {
     private HandType getHandType(List<Character> cards) {
         Set<Character> filtered = new HashSet<>(cards);
 
-        long numberDistinct = countOccurences(cards).values().stream()
+        long numberDistinct = countOccurrences(cards).values().stream()
                 .max(Long::compare).orElse(0L);
 
 
@@ -133,9 +133,8 @@ public class Solution202307 extends Day {
         };
     }
 
-    private  Map<Character, Long> countOccurences (List<Character> cards){
+    private  Map<Character, Long> countOccurrences(List<Character> cards){
         Map<Character, Long> counts = new HashMap<>();
-
         cards.forEach(c-> counts.merge(c, 1L, Long::sum));
         return counts;
 

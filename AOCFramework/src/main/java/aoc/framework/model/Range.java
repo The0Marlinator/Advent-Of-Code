@@ -1,12 +1,11 @@
 package aoc.framework.model;
 
-import aoc.framework.util.MathUtils;
-
+import java.util.ArrayList;
 import java.util.List;
 
 public class Range {
 
-    public static Range EMPTY_RANGE = new Range(0,0);
+    private static final Range EMPTY_RANGE = new Range(0,0);
 
     long floor;
     long ceiling;
@@ -18,10 +17,6 @@ public class Range {
         this.floor = floor;
         this.ceiling = ceiling;
     }
-    public Range(long floor) {
-        this.floor = floor;
-        this.ceiling = floor;
-    }
 
     public long getFloor() {
         return floor;
@@ -31,13 +26,6 @@ public class Range {
         return ceiling;
     }
 
-    public long length() {
-        return ceiling - floor;
-    }
-
-    public List<Long> getAllNumbersInRange() {
-        return MathUtils.range(floor, ceiling);
-    }
 
     public boolean inRange(Long value) {
         return value>=floor && value<=ceiling;
@@ -47,7 +35,7 @@ public class Range {
         return ceiling == floor;
     }
 
-    public Range overlapping(Range other) {
+    public Range getOverlapping(Range other) {
         if(other.ceiling < this.floor || other.floor > this.ceiling){
             return EMPTY_RANGE;
         }
@@ -65,6 +53,22 @@ public class Range {
             }
         }
     }
+
+    public List<Range> getNonOverlapping(Range other){
+        List<Range> result = new ArrayList<>();
+
+        Range overlapping = getOverlapping(other);
+        if(!overlapping.isEmpty()) {
+            if (floor < overlapping.floor) {
+                result.add(new Range(floor, overlapping.floor - 1));
+            }
+            if (ceiling > overlapping.ceiling) {
+                result.add(new Range(overlapping.ceiling + 1, ceiling));
+            }
+        }
+        return result;
+    }
+
     @Override
     public String toString() {
         if (isEmpty()) {
@@ -73,7 +77,4 @@ public class Range {
         return String.format("[%s -> %s]", floor, ceiling);
     }
 
-    public boolean isInRange(long value) {
-        return value>=floor && value<=ceiling;
-    }
 }

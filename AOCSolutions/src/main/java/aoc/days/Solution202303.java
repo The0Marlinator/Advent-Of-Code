@@ -153,7 +153,7 @@ public class Solution202303 extends Day {
     }
 
     private boolean hasSymbol(int xIndex, int yIndex) {
-        return isIndexOnGrid(xIndex, yIndex) && !isNumeric(parsedInput.get(yIndex).charAt(xIndex)) && !(parsedInput.get(yIndex).charAt(xIndex) == '.');
+        return isIndexOnGrid(xIndex, yIndex) && !isNumeric(parsedInput.get(yIndex).charAt(xIndex)) && (parsedInput.get(yIndex).charAt(xIndex) != '.');
     }
 
     private List<List<Integer>> borderingPlacesHaveNumbers(List<List<List<Integer>>> starLocations) {
@@ -166,7 +166,7 @@ public class Solution202303 extends Day {
             for (int star_x = 0; star_x < starLocations.get(star_y).size(); ++star_x) {
 
                 List<Integer> adjacentNumbers = new ArrayList<>();
-                int starXActual = starLocations.get(star_y).get(star_x).get(0);
+                int starXActual = starLocations.get(star_y).get(star_x).getFirst();
 
                 if (star_y - 1 >= 0) {
                     for (List<Integer> numberIndeciesOnRow : numberLocations.get(star_y - 1)) {

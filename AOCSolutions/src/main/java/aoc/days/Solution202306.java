@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 @DaySolution(year = 2023, day = 6)
 public class Solution202306 extends Day {
 
-    private static final String INPUT_FILE = "202306/input_short_part_1.txt";
+    private static final String INPUT_FILE = "202306/input.txt";
 
     public Solution202306(boolean printOutput) throws RuntimeException {
         super(printOutput, INPUT_FILE);
@@ -34,29 +34,29 @@ public class Solution202306 extends Day {
 
         for (int i = 0; i < times.size(); i++) {
             final int finalI = i;
-            long durationstoeatRecord = MathUtils.range(times.get(i)).stream()
+            long durationsToBeatRecord = MathUtils.range(times.get(i)).stream()
                     .map(duration -> getDistanceTraveledIfHeldForDuration(duration, times.get(finalI)))
                     .filter(distance -> distance > records.get(finalI))
                     .count();
 
-            cumulative *= durationstoeatRecord;
+            cumulative *= durationsToBeatRecord;
         }
         return Long.toString(cumulative);
     }
 
     @Override
     public String solvePart2() {
-        Long time = Long.valueOf(Arrays.stream(parsedInput.get(0).split(":")[1].trim().split(" "))
+        long time = Long.parseLong(Arrays.stream(parsedInput.get(0).split(":")[1].trim().split(" "))
                 .filter(Predicate.not(String::isBlank))
                 .collect(Collectors.joining("")));
 
-        Long record = Long.valueOf(Arrays.stream(parsedInput.get(1).split(":")[1].trim().split(" "))
+        long distanceBoundary = Long.parseLong(Arrays.stream(parsedInput.get(1).split(":")[1].trim().split(" "))
                 .filter(Predicate.not(String::isBlank))
                 .collect(Collectors.joining("")));
 
         return Long.toString(MathUtils.range(time).stream()
                 .map(duration -> getDistanceTraveledIfHeldForDuration(duration, time))
-                .filter(distance -> distance > record)
+                .filter(distance -> distance > distanceBoundary)
                 .count());
 
     }
