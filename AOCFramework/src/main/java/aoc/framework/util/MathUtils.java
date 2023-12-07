@@ -1,4 +1,4 @@
-package aoc.utils;
+package aoc.framework.util;
 
 import java.util.LinkedList;
 import java.util.List;

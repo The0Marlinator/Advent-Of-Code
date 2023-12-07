@@ -2,16 +2,12 @@ package aoc.days;
 
 import aoc.framework.Day;
 import aoc.framework.DaySolution;
-import aoc.utils.MathUtils;
-import aoc.utils.Pair;
+import aoc.framework.util.MathUtils;
 
-import java.math.BigInteger;
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @DaySolution(year = 2023, day = 6)
 public class Solution202306 extends Day {

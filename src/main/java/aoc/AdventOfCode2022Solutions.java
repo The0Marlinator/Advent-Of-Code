@@ -39,7 +39,7 @@ public class AdventOfCode2022Solutions {
             }
         }
     }
-
+    
     private static List<Integer> getAllYears() {
         return DaySolutionFactory.createDaySolutions().stream()
                 .filter(day -> Objects.nonNull(day.getClass().getAnnotation(DaySolution.class)))
