@@ -30,4 +30,4 @@ jobs:
       run: ./gradlew build
 
     - name: Run Java Application
-      run: java -jar build/libs/AoC-Java-Foundation-1.0.jar
+      run: java -jar "build/libs/Advent Of Code Solutions-1.0.jar"
