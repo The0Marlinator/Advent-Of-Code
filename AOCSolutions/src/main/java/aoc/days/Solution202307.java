@@ -67,7 +67,7 @@ public class Solution202307 extends Day {
     }
 
     private int compareHands(Pair<List<Character>, Long> first, Pair<List<Character>, Long> second) {
-        if (getHandType(first.first).equals(getHandType(second.first))) {
+        if (getHandType(first.getFirst()).equals(getHandType(second.getFirst()))) {
             return compareHandBasedOnCardValues(first, second, CARDS);
 
         }

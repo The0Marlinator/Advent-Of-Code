@@ -2,9 +2,9 @@ package aoc.framework.model;
 
 public class Pair<T, V> {
 
-    public T first;
+    private final T first;
 
-    public V second;
+    private final V second;
 
     public Pair(T first, V second) {
         this.first = first;

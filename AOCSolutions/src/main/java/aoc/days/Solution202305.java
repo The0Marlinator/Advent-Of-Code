@@ -75,14 +75,14 @@ public class Solution202305 extends Day {
         for (Pair<Range, Range> map : mapList) {
             List<Range> newUnmapped = new LinkedList<>();
             for (Range unmappedRange : unmapped) {
-                Range overLappingRange = map.first.getOverlapping(unmappedRange);
+                Range overLappingRange = map.getFirst().getOverlapping(unmappedRange);
                 if (overLappingRange.isEmpty()) {
                     newUnmapped.add(new Range(unmappedRange.getFloor(), unmappedRange.getCeiling()));
                     continue;
                 } else {
-                    newUnmapped.addAll(unmappedRange.getNonOverlapping(map.first));
+                    newUnmapped.addAll(unmappedRange.getNonOverlapping(map.getFirst()));
                 }
-                printToOutput("Step: " + mapIndex + " input:" + unmappedRange + " overlapping:" + overLappingRange + " source map:" + map.first + " destination map:" + map.second + " mapped:" + mapRangeToRangePair(overLappingRange, map) + " unmapped: " + newUnmapped);
+                printToOutput("Step: " + mapIndex + " input:" + unmappedRange + " overlapping:" + overLappingRange + " source map:" + map.getFirst() + " destination map:" + map.getSecond() + " mapped:" + mapRangeToRangePair(overLappingRange, map) + " unmapped: " + newUnmapped);
                 smallest = Math.min(smallest, getSmallestLocationFromRange(mapRangeToRangePair(overLappingRange, map), getNextMapIndex(mapIndex)));
             }
             unmapped = newUnmapped;
@@ -98,9 +98,9 @@ public class Solution202305 extends Day {
     }
 
     private Range mapRangeToRangePair(Range r, Pair<Range, Range> rp) {
-        long floorOffset = Math.abs(r.getFloor() - rp.first.getFloor());
+        long floorOffset = Math.abs(r.getFloor() - rp.getFirst().getFloor());
 
-        return new Range(rp.second.getFloor() + floorOffset, rp.second.getFloor() + floorOffset + (r.getCeiling() - r.getFloor()));
+        return new Range(rp.getSecond().getFloor() + floorOffset, rp.getSecond().getFloor() + floorOffset + (r.getCeiling() - r.getFloor()));
     }
 
     private String getNextMapIndex(String mapIndex) {
@@ -117,9 +117,9 @@ public class Solution202305 extends Day {
 
     private Long mapFromRange(String mapIndex, Long value) {
         for (Pair<Range, Range> mapping : rangeMapping.get(mapIndex)) {
-            if (mapping.first.inRange(value)) {
-                long sourceFloor = mapping.first.getFloor();
-                long destinationFloor = mapping.second.getFloor();
+            if (mapping.getFirst().inRange(value)) {
+                long sourceFloor = mapping.getFirst().getFloor();
+                long destinationFloor = mapping.getSecond().getFloor();
 
                 return Math.abs(sourceFloor - value) + destinationFloor;
             }
