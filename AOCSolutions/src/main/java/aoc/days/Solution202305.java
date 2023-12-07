@@ -25,7 +25,7 @@ public class Solution202305 extends Day {
     private final Map<String, List<Pair<Range, Range>>> rangeMapping;
 
     public Solution202305(boolean printOutput) throws RuntimeException {
-        super(false, INPUT_FILE_PATH);
+        super(printOutput, INPUT_FILE_PATH);
         rangeMapping = splitStringIntoSections();
     }
 
