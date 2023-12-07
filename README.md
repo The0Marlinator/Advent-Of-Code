@@ -1,4 +1,4 @@
-# My solutions to the Advent Of COde
+# My solutions to Advent Of Code
 
 Note the actual Solutions are in the AOC Solutions Module (They are annotatedn with the Year and day)
 
