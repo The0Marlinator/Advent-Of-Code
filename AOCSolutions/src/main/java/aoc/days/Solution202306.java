@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 @DaySolution(year = 2023, day = 6)
 public class Solution202306 extends Day {
 
-    private static final String INPUT_FILE = "202306/input.txt";
+    private static final String INPUT_FILE = "202306/input_short_part_1.txt";
 
     public Solution202306(boolean printOutput) throws RuntimeException {
         super(printOutput, INPUT_FILE);
