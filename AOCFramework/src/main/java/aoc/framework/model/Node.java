@@ -2,9 +2,8 @@ package aoc.framework.model;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
-public class Node {
+public class Node implements Comparable<Node> {
 
     private List<Node> children;
 
@@ -25,7 +24,7 @@ public class Node {
         this.children.addAll(children);
     }
 
-    public Node traverseToSpecificChild(int child) {
+    public Node getChildAtPosition(int child) {
         return children.get(child);
     }
 
@@ -36,5 +35,20 @@ public class Node {
         }
 
         return ((Node) other).label.equals(label);
+    }
+
+    @Override
+    public String toString(){
+        return "(Node:" + label + ")";
+    }
+
+    @Override
+    public int hashCode() {
+        return label.hashCode();
+    }
+
+    @Override
+    public int compareTo(Node o) {
+        return label.compareTo(o.label);
     }
 }

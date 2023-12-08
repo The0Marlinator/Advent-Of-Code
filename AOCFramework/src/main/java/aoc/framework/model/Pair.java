@@ -27,4 +27,17 @@ public class Pair<T, V> {
     public String toString() {
         return "<"+first+", "+second+">";
     }
+
+    @Override
+    public int hashCode() {
+        return first.hashCode()*10+second.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other instanceof Pair<?,?> ) {
+            return first.equals(((Pair<?, ?>) other).first) && second.equals(((Pair<?, ?>) other).second);
+        }
+        return false;
+    }
 }

@@ -3,6 +3,7 @@ package aoc.days;
 import aoc.framework.Day;
 import aoc.framework.DaySolution;
 import aoc.framework.model.Node;
+import aoc.framework.model.Pair;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -14,13 +15,13 @@ public class Solution202308 extends Day {
 
     private final List<Integer> instructions;
 
-    private Map<String, Node> allNodes;
+    private final Map<String, Node> allNodes;
 
     public Solution202308(boolean printToOutput) {
-        super(printToOutput, INPUT_FILE);
+        super(true, INPUT_FILE);
         allNodes = buildNodeList();
         instructions = Arrays.stream(parsedInput.getFirst().split(""))
-                .map( s -> s.equals("L")? 0: 1)
+                .map(s -> s.equals("L") ? 0 : 1)
                 .toList();
     }
 
@@ -29,16 +30,16 @@ public class Solution202308 extends Day {
         Node currentNode = allNodes.get("AAA");
         Node targetNode = allNodes.get("ZZZ");
         int stepCount = 0;
-        if(currentNode == null || targetNode == null) {
+        if (currentNode == null || targetNode == null) {
             return "Unable to complete Solution Because the source or target Node could not be found";
         }
         int intrsuctionIndex = 0;
         while (!currentNode.equals(targetNode)) {
-            currentNode = currentNode.traverseToSpecificChild(instructions.get(intrsuctionIndex));
-            stepCount+=1;
-            intrsuctionIndex = (intrsuctionIndex+1)%instructions.size();
-            if(currentNode.equals(targetNode)) {
-                return ""+stepCount;
+            currentNode = currentNode.getChildAtPosition(instructions.get(intrsuctionIndex));
+            stepCount += 1;
+            intrsuctionIndex = (intrsuctionIndex + 1) % instructions.size();
+            if (currentNode.equals(targetNode)) {
+                return "" + stepCount;
             }
         }
         return null;
@@ -46,28 +47,71 @@ public class Solution202308 extends Day {
 
     @Override
     public String solvePart2() {
-       List<Node> currentNodes = getNodesEnding('A');
-       List<Node> endNodes = getNodesEnding('Z');
+        List<Node> startNodes = getNodesEnding('A');
+        List<Node> currentNodes = getNodesEnding('A');
+        List<Node> endNodes = getNodesEnding('Z');
 
+        Map<Node, Long> firstCycleLength = new HashMap<>();
+       List<Pair<Node, Long>> cycleLengths = new ArrayList<>();
         int intrsuctionIndex = 0;
         long stepCount = 0;
 
-       while (!endNodes.containsAll(currentNodes)) {
-           List<Node> newCurrents = new ArrayList<>();
-           stepCount+=1;
-           for (Node current: currentNodes) {
-               newCurrents.add(current.traverseToSpecificChild(instructions.get(intrsuctionIndex)));
-           }
-           currentNodes= newCurrents;
-           intrsuctionIndex = (intrsuctionIndex+1)%instructions.size();
-       }
-       return ""+stepCount;
+        while (cycleLengths.size() != startNodes.size()) {
+            List<Node> newCurrents = new ArrayList<>();
+            stepCount += 1;
+            for (int i = 0; i < currentNodes.size(); i++) {
+                Node childAtPosition = currentNodes.get(i).getChildAtPosition(instructions.get(intrsuctionIndex));
+
+                if(endNodes.contains(childAtPosition)) {
+                    if(firstCycleLength.get(startNodes.get(i)) != null) {
+                        int finalI = i;
+                        long cycleLength = stepCount-firstCycleLength.get(startNodes.get(i));
+                        printToOutput(() -> String.format("The traversal starting with %s has arrived at at an endNode after %s cycleLength.", startNodes.get(finalI), cycleLength));
+                        cycleLengths.add(new Pair<>(startNodes.get(i), cycleLength));
+                    } else {
+                        long finalStepCount = stepCount;
+                        int finalI1 = i;
+                        printToOutput(() -> String.format("The traversal starting with %s has arrived at at an endNode after %s steps.", startNodes.get(finalI1), finalStepCount));
+                        firstCycleLength.put(startNodes.get(i), stepCount);
+                    }
+                }
+                newCurrents.add(childAtPosition);
+            }
+            intrsuctionIndex = (intrsuctionIndex + 1) % instructions.size();
+            currentNodes = newCurrents;
+        }
+        return "" + smallestCommonGround(cycleLengths, firstCycleLength);
+    }
+
+
+    private Long smallestCommonGround(List<Pair<Node, Long>> counts, Map<Node, Long> starts) {
+
+        List<Long> sums = starts.entrySet().stream()
+                .sorted(Comparator.comparing(Map.Entry::getKey))
+                .map(Map.Entry::getValue)
+                .toList();
+
+        List<Long> cycleLenghts = counts.stream()
+                .sorted(Comparator.comparing(Pair::getFirst))
+                .map(Pair::getSecond)
+                .toList();
+
+        while (new HashSet<>(sums).size() != 1) {
+            List<Long> newSums = new LinkedList<>();
+            for (int i = 0; i<sums.size(); i++){
+                newSums.add(sums.get(i)+cycleLenghts.get(i));
+            }
+            List<Long> finalSums = sums;
+            printToOutput(finalSums::toString);
+            sums = newSums;
+        }
+        return sums.getFirst();
     }
 
     private List<Node> getNodesEnding(char c) {
         return allNodes.keySet().stream()
-                .filter(s -> s.charAt(s.length()-1) == c)
-                .map(s -> allNodes.get(s))
+                .filter(s -> s.charAt(s.length() - 1) == c)
+                .map(allNodes::get)
                 .toList();
     }
 
