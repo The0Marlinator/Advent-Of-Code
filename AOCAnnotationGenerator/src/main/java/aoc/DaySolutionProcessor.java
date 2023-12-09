@@ -1,30 +1,22 @@
 package aoc;
 
+import aoc.framework.solution.AOCSolution;
+import aoc.framework.solution.Solution;
+import com.google.auto.service.AutoService;
+import com.squareup.javapoet.*;
+
 import javax.annotation.processing.AbstractProcessor;
-import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.Processor;
-import javax.annotation.processing.ProcessingEnvironment;
+import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
-
-import aoc.framework.Day;
-import aoc.framework.DaySolution;
-import com.squareup.javapoet.JavaFile;
-import com.squareup.javapoet.MethodSpec;
-import com.squareup.javapoet.TypeSpec;
-import com.squareup.javapoet.TypeName;
-import com.squareup.javapoet.ParameterizedTypeName;
-import com.squareup.javapoet.WildcardTypeName;
-import com.squareup.javapoet.ClassName;
-import com.google.auto.service.AutoService;
-
 import java.io.IOException;
 import java.io.Writer;
-import java.util.Set;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @AutoService(Processor.class)
 public class DaySolutionProcessor extends AbstractProcessor {
@@ -33,7 +25,7 @@ public class DaySolutionProcessor extends AbstractProcessor {
 
     @Override
     public Set<String> getSupportedAnnotationTypes() {
-        return Set.of(DaySolution.class.getName());
+        return Set.of(Solution.class.getName());
     }
 
     @Override
@@ -44,14 +36,14 @@ public class DaySolutionProcessor extends AbstractProcessor {
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
 
-       if(generated) {
-           return true;
-       }
-        for (var element : roundEnv.getElementsAnnotatedWith(DaySolution.class)) {
+        if (generated) {
+            return true;
+        }
+        for (var element : roundEnv.getElementsAnnotatedWith(Solution.class)) {
             processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, "Found annotated class: " + element.getSimpleName());
         }
         List<String> classNames = new ArrayList<>();
-        for (var element : roundEnv.getElementsAnnotatedWith(DaySolution.class)) {
+        for (var element : roundEnv.getElementsAnnotatedWith(Solution.class)) {
             if (element instanceof TypeElement typeElement) {
                 classNames.add(typeElement.getQualifiedName().toString());
                 processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, "Found annotated class: " + typeElement.getQualifiedName());
@@ -67,13 +59,13 @@ public class DaySolutionProcessor extends AbstractProcessor {
     private void generateDaySolutionFactory(List<String> classNames) {
         MethodSpec.Builder methodBuilder = MethodSpec.methodBuilder("createDaySolutions")
                 .returns(ParameterizedTypeName.get(ClassName.get(List.class),
-                        WildcardTypeName.subtypeOf(Day.class)))
+                        WildcardTypeName.subtypeOf(AOCSolution.class)))
                 .addModifiers(javax.lang.model.element.Modifier.PUBLIC, javax.lang.model.element.Modifier.STATIC);
 
 
         methodBuilder.addStatement("$T result = new $T<>()",
                 ParameterizedTypeName.get(ClassName.get(List.class),
-                        TypeName.get(Day.class)),
+                        TypeName.get(AOCSolution.class)),
                 ArrayList.class);
 
         for (String className : classNames) {

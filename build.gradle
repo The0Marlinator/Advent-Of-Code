@@ -12,6 +12,7 @@ repositories {
 dependencies {
     implementation project(':AOCSolutions')
     implementation project(':AOCFramework')
+    testImplementation 'junit:junit:4.13.1'
 }
 
 java {

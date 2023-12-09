@@ -16,10 +16,12 @@ java {
 }
 
 dependencies {
-    implementation project(':AOCFramework')
-    annotationProcessor project(':AOCAnnotationGenerator')
+    testImplementation('org.assertj:assertj-core:3.24.2')
     testImplementation platform('org.junit:junit-bom:5.9.1')
     testImplementation 'org.junit.jupiter:junit-jupiter'
+
+    implementation project(':AOCFramework')
+    annotationProcessor project(':AOCAnnotationGenerator')
 }
 
 // Define a directory for generated sources
