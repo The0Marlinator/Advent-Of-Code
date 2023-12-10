@@ -1,5 +1,6 @@
 package aoc.framework.solution;
 
+import aoc.framework.exception.AOCException;
 import aoc.framework.util.AocUtil;
 import aoc.framework.util.StringUtils;
 
@@ -11,6 +12,11 @@ public abstract class AOCSolution {
 
     protected final List<String> parsedInput;
     private final boolean printOutput;
+
+    protected AOCSolution(boolean printOutput, List<String> input) {
+        this.printOutput = printOutput;
+        this.parsedInput = input;
+    }
 
     protected AOCSolution(boolean printOutput) {
         this.printOutput = printOutput;
@@ -42,8 +48,8 @@ public abstract class AOCSolution {
         }
     }
 
-    public abstract String solvePart1();
+    public abstract String solvePart1() throws AOCException;
 
-    public abstract String solvePart2();
+    public abstract String solvePart2() throws AOCException;
 
 }

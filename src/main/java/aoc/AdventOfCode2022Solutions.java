@@ -1,6 +1,7 @@
 package aoc;
 
 import aoc.factory.DaySolutionFactory;
+import aoc.framework.exception.AOCException;
 import aoc.framework.solution.AOCSolution;
 import aoc.framework.solution.Solution;
 
@@ -19,7 +20,7 @@ public class AdventOfCode2022Solutions {
         System.exit(0);
     }
 
-    private static void solveAll() {
+    private static void solveAll() throws AOCException {
         for (int year : getAllYears()) {
             System.out.printf("Solutions for %s Advent Of Code %n", year);
             List<? extends AOCSolution> days = getAllSolutionsForYear(year);
