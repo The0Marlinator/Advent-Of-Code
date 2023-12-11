@@ -1,12 +1,12 @@
 package aoc.solutions;
 
 import aoc.framework.exception.AOCException;
+import aoc.framework.model.Pair;
 import aoc.framework.model.math.Coordinate;
 import aoc.framework.model.math.Matrix;
 import aoc.framework.solution.AOCSolution;
 import aoc.framework.solution.Solution;
 import aoc.framework.util.CollectionUitls;
-import aoc.framework.util.MathUtils;
 import aoc.framework.util.StringUtils;
 
 import java.util.*;
@@ -59,11 +59,12 @@ public class Solution202310 extends AOCSolution {
     @Override
     public String solvePart1() throws AOCException {
 
-        List<Coordinate> wayTostart = map.findLocationOfValue(PipeType.STARTING_POSITION)
+        List<Coordinate> wayTostart = map.findAny(PipeType.STARTING_POSITION)
                 .map(l -> findLoop(l, l))
                 .orElseThrow(() -> new AOCException("Unable to Find Starting Position in Input"))
                 .orElseThrow(() -> new AOCException("Unable to find Loop"))
-                .history();
+                .history()
+                .reversed();
 
         return "" + (wayTostart.size() + 1) / 2;
     }
@@ -71,65 +72,61 @@ public class Solution202310 extends AOCSolution {
     @Override
     public String solvePart2() throws AOCException {
 
-        List<Coordinate> wayTostart = map.findLocationOfValue(PipeType.STARTING_POSITION)
+        List<Coordinate> wayTostart = map.findAny(PipeType.STARTING_POSITION)
                 .map(l -> findLoop(l, l))
                 .orElseThrow(() -> new AOCException("Unable to Find Starting Position in Input"))
                 .orElseThrow(() -> new AOCException("Unable to find Loop"))
                 .history();
 
-        Map<Integer, List<Coordinate>> grouped = groupByYCoordinate(wayTostart);
-        long placesBetweenPipes = 0;
-
-        for (int i : grouped.keySet()) {
-            if (grouped.get(i) != null && grouped.get(i).size() != map.xLength()) {
-                boolean isReadingSpace = false;
-                Coordinate readStart = null;
-                for (int j = 0; j < grouped.get(i).size(); j++) {
-                    if (isReadingSpace) {
-                        isReadingSpace = false;
-                        placesBetweenPipes += countGroundBetweenPointXCoordinates(readStart, grouped.get(i).get(j));
-                    } else if (j + 1 != grouped.get(i).size()) {
-                        readStart = grouped.get(i).get(j);
-                        isReadingSpace = true;
-                    }
-                }
-                if (isReadingSpace) {
-                    throw new AOCException("Has finished reading line but the last pipe was not closed. This was unexepected");
-                }
-            }
-
-        }
-
-        return "" + placesBetweenPipes;
-
+        return String.format("Solution 1: %s , Solution 2 (reversed path): %s", fidInnerPoints(wayTostart, false).size(), fidInnerPoints(wayTostart, true).size());
     }
 
-    private long countGroundBetweenPointXCoordinates(Coordinate first, Coordinate second) {
-        return MathUtils.range(first.x(), second.x()).stream()
-                .map(l -> new Coordinate(l.intValue(), first.y()))
-                .map(map::get)
-                .filter(pipeType -> pipeType.equals(PipeType.GROUND))
-                .count();
+    private List<Coordinate> fidInnerPoints(List<Coordinate> path, boolean reversed) {
+        List<Coordinate> finalPath = reversed ? path.reversed() : path;
 
-    }
+        PipeType[][] d = new PipeType[map.xLength()][map.yLength()];
 
-    private Map<Integer, List<Coordinate>> groupByYCoordinate(List<Coordinate> path) {
-        Map<Integer, List<Coordinate>> grouped = new HashMap<>();
-
-
-        for (Coordinate c : path) {
-            List<Coordinate> found = grouped.get(c.y());
-
-            if (found == null) {
-                List<Coordinate> newList = new ArrayList<>();
-                newList.add(c);
-                grouped.put(c.y(), newList);
-            } else {
-                grouped.get(c.y()).add(c);
-                grouped.get(c.y()).sort(Comparator.comparing(Coordinate::x));
+        for (int i = 0; i < map.xLength(); i++) {
+            for (int j = 0; j < map.yLength(); j++) {
+                d[i][j] = map.getData()[i][j];
             }
         }
-        return grouped;
+
+        Matrix<PipeType> newMap = new Matrix<>(d);
+        for (int i = 0; i < path.size() - 1; i++) {
+            newMap.setValue(path.get(i), PipeType.PATH);
+            Pair<Coordinate, Coordinate> check = getCoordinateToLeft(finalPath, i);
+
+            if (map.isLegalCoordinate(check.first())) {
+                newMap.floodFill(check.first(), path::contains, PipeType.INNER);
+            }
+            if (map.isLegalCoordinate(check.second())) {
+                newMap.floodFill(check.second(), path::contains, PipeType.INNER);
+            }
+        }
+        return newMap.findAll(PipeType.INNER);
+    }
+
+    private Pair<Coordinate, Coordinate> getCoordinateToLeft(List<Coordinate> wayTostart, int i) {
+        Coordinate current = wayTostart.get(i);
+        Coordinate next = wayTostart.get(i + 1);
+        Coordinate left;
+        Coordinate straight = null;
+        if (next.x() < current.x()) {
+            left = new Coordinate(current.x(), current.y() - 1);
+            straight = new Coordinate(next.x(), next.y() - 1);
+        } else if (next.x() > current.x()) {
+            left = new Coordinate(current.x(), current.y() + 1);
+            straight = new Coordinate(next.x(), next.y() + 1);
+        } else if (next.y() < current.y()) {
+            left = new Coordinate(current.x() + 1, current.y());
+            straight = new Coordinate(next.x() + 1, next.y());
+        } else {
+            left = new Coordinate(current.x() - 1, current.y());
+            straight = new Coordinate(next.x() - 1, next.y());
+        }
+
+        return new Pair<>(left, straight);
     }
 
     private Optional<StackFrame> findLoop(Coordinate startingPosition, Coordinate source) {
@@ -218,7 +215,38 @@ public class Solution202310 extends AOCSolution {
     }
 
     private enum PipeType {
-        VERTICAL_BEND, HORIZONTAL_PIPE, L_BEND, J_BEND, SEVEN_BEND, F_BEND, GROUND, STARTING_POSITION, INVALID_CHARACTER;
+        VERTICAL_BEND, HORIZONTAL_PIPE, L_BEND, J_BEND, SEVEN_BEND, F_BEND, GROUND, STARTING_POSITION, INVALID_CHARACTER, INNER, OUTER, PATH;
+
+        public boolean isVerticalSqueezable() {
+            return switch (this.ordinal()) {
+                case 0, 4, 5, 2, 3 -> true;
+                default -> false;
+            };
+        }
+
+        public boolean isHorizonticallySqueezable() {
+            return this.ordinal() == 1;
+        }
+
+
+        @Override
+        public String toString() {
+            return switch (this.ordinal()) {
+                case 0 -> "|";
+                case 1 -> "-";
+                case 2 -> "L";
+                case 3 -> "J";
+                case 4 -> "7";
+                case 5 -> "F";
+                case 6 -> ".";
+                case 7 -> "S";
+                case 8 -> "/";
+                case 9 -> "I";
+                case 10 -> "O";
+                case 11 -> "P";
+                default -> " ";
+            };
+        }
     }
 
 

@@ -1,5 +1,10 @@
 package aoc.framework.model.math;
 
+import aoc.framework.util.MathUtils;
+
+import java.util.List;
+import java.util.Map;
+
 public record Coordinate(int x, int y) {
 
     public boolean isAbove(Coordinate other) {
@@ -32,5 +37,11 @@ public record Coordinate(int x, int y) {
 
     public boolean isDiagonalBottomRight(Coordinate other) {
         return isBelow(other) && isRight(other);
+    }
+
+    public List<Coordinate> getCoordinatesBetweenX(Coordinate other) {
+        return MathUtils.range(x, other.x).stream()
+                .map(x -> new Coordinate(x.intValue(), y))
+                .toList();
     }
 }

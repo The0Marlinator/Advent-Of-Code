@@ -44,7 +44,6 @@ public abstract class AOCSolution {
     protected void printToOutput(Supplier<String> stringSupplier) {
         if (printOutput && (stringSupplier.get() != null)) {
             System.out.println(stringSupplier.get());
-
         }
     }
 
