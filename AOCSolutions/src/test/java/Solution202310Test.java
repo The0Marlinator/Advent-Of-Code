@@ -18,9 +18,9 @@ class Solution202310Test {
                         .|.|.
                         .L-J.
                         .....""")
-                .asStrings();
+                .asList();
 
-        AOCSolution solution = new Solution202310(true, input);
+        AOCSolution solution = new Solution202310(false, input);
 
         assertThat(solution.solvePart1()).isEqualTo("4");
     }
@@ -33,10 +33,10 @@ class Solution202310Test {
                         SJ.L7
                         |F--J
                         LJ...""")
-                .asStrings();
+                .asList();
 
 
-        AOCSolution solution = new Solution202310(true, input);
+        AOCSolution solution = new Solution202310(false, input);
 
         assertThat(solution.solvePart1()).isEqualTo("8");
     }
@@ -53,10 +53,10 @@ class Solution202310Test {
                         .|..|.|..|.
                         .L--J.L--J.
                         ...........""")
-                .asStrings();
+                .asList();
 
 
-        AOCSolution solution = new Solution202310(true, input);
+        AOCSolution solution = new Solution202310(false, input);
 
         assertThat(solution.solvePart2()).contains("4");
     }
@@ -75,9 +75,9 @@ class Solution202310Test {
                         .....|FJLJ|FJ|F7|.LJ
                         ....FJL-7.||.||||...
                         ....L---J.LJ.LJLJ...""")
-                .asStrings();
+                .asList();
 
-        AOCSolution solution = new Solution202310(true, input);
+        AOCSolution solution = new Solution202310(false, input);
 
         assertThat(solution.solvePart2()).contains("8");
     }
@@ -95,9 +95,9 @@ class Solution202310Test {
                         7-L-JL7||F7|L7F-7F7|
                         L.L7LFJ|||||FJL7||LJ
                         L7JLJL-JLJLJL--JLJ.L""")
-                .asStrings();
+                .asList();
 
-        AOCSolution solution = new Solution202310(true, input);
+        AOCSolution solution = new Solution202310(false, input);
 
         assertThat(solution.solvePart2()).contains("10");
     }

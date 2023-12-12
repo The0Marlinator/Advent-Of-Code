@@ -1,4 +1,4 @@
-package aoc.framework.model.math;
+package aoc.framework.model.mapping;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -45,9 +45,12 @@ public record Coordinate(int x, int y) {
                 if(!current.equals(surroundingCoordinate)){
                     result.add(surroundingCoordinate);
                 }
-
             }
         }
         return result;
+    }
+
+    public int manhattanDistance(Coordinate other) {
+        return Math.abs(x-other.x) + Math.abs(y-other.y);
     }
 }

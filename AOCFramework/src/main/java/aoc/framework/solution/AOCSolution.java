@@ -28,12 +28,13 @@ public abstract class AOCSolution {
 
         try {
             String input = AocUtil.getInputFileFromRemote(annotation.day(), annotation.year());
-            parsedInput = StringUtils.splitStringAroundNewLine(input).asStrings();
+            parsedInput = StringUtils.splitStringAroundNewLine(input).asList();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
     }
+
 
     protected void printToOutput(String output) {
         if (printOutput) {

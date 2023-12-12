@@ -2,6 +2,7 @@ package aoc.framework.util;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -37,13 +38,12 @@ public final class StringUtils {
             return string.map(Long::parseLong).toList();
         }
 
-        public List<String> asStrings() {
+        public List<String> asList() {
             return string.toList();
         }
     }
 
     public record CharacterWrapper(Stream<Character> characters) {
-
     }
 
 }

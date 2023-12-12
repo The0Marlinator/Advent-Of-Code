@@ -2,8 +2,8 @@ package aoc.solutions;
 
 import aoc.framework.exception.AOCException;
 import aoc.framework.model.Pair;
-import aoc.framework.model.math.Coordinate;
-import aoc.framework.model.math.Matrix;
+import aoc.framework.model.mapping.Coordinate;
+import aoc.framework.model.mapping.CoordinateMap;
 import aoc.framework.solution.AOCSolution;
 import aoc.framework.solution.Solution;
 import aoc.framework.util.CollectionUitls;
@@ -15,45 +15,30 @@ import java.util.stream.Stream;
 @Solution(year = 2023, day = 10)
 public class Solution202310 extends AOCSolution {
 
-    private final Matrix<PipeType> map;
+    private final CoordinateMap<PipeType> map;
 
     public Solution202310(boolean printOutput) {
         super(printOutput);
-        List<List<PipeType>> mapData = parsedInput.stream()
+        map = new CoordinateMap<>(parsedInput.stream()
                 .map(StringUtils::splitIntoCharacters)
                 .map(StringUtils.CharacterWrapper::characters)
                 .map(c -> c.map(PipeType::of))
                 .map(Stream::toList)
-                .toList();
-
-        PipeType[][] processedData = new PipeType[mapData.getFirst().size()][mapData.size()];
-        for (int x = 0; x < processedData[0].length; x++) {
-            for (int y = 0; y < processedData.length; y++) {
-                processedData[x][y] = mapData.get(y).get(x);
-            }
-        }
-
-        map = new Matrix<>(processedData);
+                .toList())
+                .transpose();
     }
 
     public Solution202310(boolean printOutput, List<String> input) {
         super(printOutput, input);
 
-        List<List<PipeType>> mapData = parsedInput.stream()
+        map = new CoordinateMap<>(parsedInput.stream()
                 .map(StringUtils::splitIntoCharacters)
                 .map(StringUtils.CharacterWrapper::characters)
                 .map(c -> c.map(PipeType::of))
                 .map(Stream::toList)
-                .toList();
+                .toList())
+                .transpose();
 
-        PipeType[][] processedData = new PipeType[mapData.getFirst().size()][mapData.size()];
-        for (int x = 0; x < processedData.length; x++) {
-            for (int y = 0; y < processedData[0].length; y++) {
-                processedData[x][y] = mapData.get(y).get(x);
-            }
-        }
-
-        map = new Matrix<>(processedData);
     }
 
     @Override
@@ -78,23 +63,22 @@ public class Solution202310 extends AOCSolution {
                 .orElseThrow(() -> new AOCException("Unable to find Loop"))
                 .history();
 
-        return String.format("Solution 1: %s , Solution 2 (reversed path): %s", fidInnerPoints(wayTostart, false).size(), fidInnerPoints(wayTostart, true).size());
+        return String.format("Solution 1: %s , Solution 2 (reversed path): %s", findInnerPoints(wayTostart, false).size(), findInnerPoints(wayTostart, true).size());
+
+        //FilterWindow filterWindow = new FilterWindow(map, wayTostart);
+
+        //return "" + map.pathTrace(filterWindow::isVerticalWall, filterWindow::isHorizontalWall, filterWindow::ignore,PipeType.INNER).size();
     }
 
-    private List<Coordinate> fidInnerPoints(List<Coordinate> path, boolean reversed) {
+
+    private List<Coordinate> findInnerPoints(List<Coordinate> path, boolean reversed) {
         List<Coordinate> finalPath = reversed ? path.reversed() : path;
 
-        PipeType[][] d = new PipeType[map.xLength()][map.yLength()];
 
-        for (int i = 0; i < map.xLength(); i++) {
-            for (int j = 0; j < map.yLength(); j++) {
-                d[i][j] = map.getData()[i][j];
-            }
-        }
+        CoordinateMap<PipeType> newMap = new CoordinateMap<>(map);
 
-        Matrix<PipeType> newMap = new Matrix<>(d);
         for (int i = 0; i < path.size() - 1; i++) {
-            newMap.setValue(path.get(i), PipeType.PATH);
+            newMap.set(path.get(i), PipeType.PATH);
             Pair<Coordinate, Coordinate> check = getCoordinateToLeftAndStraightAhead(finalPath, i);
 
             if (map.isLegalCoordinate(check.first())) {
@@ -204,6 +188,18 @@ public class Solution202310 extends AOCSolution {
     private enum PipeType {
         VERTICAL_BEND, HORIZONTAL_PIPE, L_BEND, J_BEND, SEVEN_BEND, F_BEND, GROUND, STARTING_POSITION, INVALID_CHARACTER, INNER, OUTER, PATH;
 
+        public boolean isVertical() {
+            return switch (this) {
+                case F_BEND, J_BEND, SEVEN_BEND, L_BEND, VERTICAL_BEND, STARTING_POSITION -> true;
+                default -> false;
+            };
+        }
+        public boolean isHorizontal() {
+            return switch (this) {
+                case F_BEND, J_BEND, SEVEN_BEND, L_BEND, HORIZONTAL_PIPE, STARTING_POSITION -> true;
+                default -> false;
+            };
+        }
 
         public static PipeType of(char s) {
             return switch (s) {
@@ -221,26 +217,50 @@ public class Solution202310 extends AOCSolution {
 
         @Override
         public String toString() {
-            return switch (this.ordinal()) {
-                case 0 -> "|";
-                case 1 -> "-";
-                case 2 -> "L";
-                case 3 -> "J";
-                case 4 -> "7";
-                case 5 -> "F";
-                case 6 -> ".";
-                case 7 -> "S";
-                case 8 -> "/";
-                case 9 -> "I";
-                case 10 -> "O";
-                case 11 -> "P";
-                default -> " ";
+            return switch (this) {
+                case VERTICAL_BEND -> "|";
+                case HORIZONTAL_PIPE -> "-";
+                case L_BEND -> "L";
+                case J_BEND -> "J";
+                case SEVEN_BEND -> "7";
+                case F_BEND -> "F";
+                case GROUND -> ".";
+                case STARTING_POSITION -> "S";
+                case INVALID_CHARACTER -> "/";
+                case INNER -> "I";
+                case OUTER -> "O";
+                case PATH -> "P";
             };
         }
     }
 
 
     private record StackFrame(Coordinate startingNode, Coordinate Source, List<Coordinate> history) {
+    }
+
+    private class FilterWindow {
+
+        private final CoordinateMap<PipeType> map;
+        private final List<Coordinate> path;
+
+        private FilterWindow(CoordinateMap<PipeType> map, List<Coordinate> path) {
+            this.path = path;
+            this.map = map;
+        }
+
+        public boolean isVerticalWall(Coordinate coordinate) {
+            return (map.get(coordinate).isVertical() && path.contains(coordinate));
+        }
+
+        public boolean isHorizontalWall(Coordinate coordinate) {
+            return (map.get(coordinate).isHorizontal() && path.contains(coordinate));
+        }
+
+        public boolean ignore(Coordinate coordinate) {
+            return path.contains(coordinate);
+
+        }
+
     }
 
 }
