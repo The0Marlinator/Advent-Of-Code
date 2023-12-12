@@ -1,9 +1,7 @@
 package aoc.framework.model.math;
 
-import aoc.framework.util.MathUtils;
-
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 public record Coordinate(int x, int y) {
 
@@ -39,9 +37,17 @@ public record Coordinate(int x, int y) {
         return isBelow(other) && isRight(other);
     }
 
-    public List<Coordinate> getCoordinatesBetweenX(Coordinate other) {
-        return MathUtils.range(x, other.x).stream()
-                .map(x -> new Coordinate(x.intValue(), y))
-                .toList();
+    public List<Coordinate> getAllSurrounding(Coordinate current) {
+        List<Coordinate> result = new LinkedList<>();
+        for (int xDt = -1; xDt <= 1; xDt++) {
+            for (int yDt = -1; yDt <= 1; yDt++) {
+                Coordinate surroundingCoordinate = new Coordinate(current.x + xDt, current.y + yDt);
+                if(!current.equals(surroundingCoordinate)){
+                    result.add(surroundingCoordinate);
+                }
+
+            }
+        }
+        return result;
     }
 }

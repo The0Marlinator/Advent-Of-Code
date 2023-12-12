@@ -2,10 +2,11 @@ package aoc.framework.model.math;
 
 import java.util.*;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 public class Matrix<T> {
 
-    private T[][] data;
+    private final T[][] data;
 
     public Matrix(T[][] dataInput) {
         data = dataInput;
@@ -52,6 +53,9 @@ public class Matrix<T> {
     public int yLength() {
         return data[0].length;
     }
+    public T[][] getData() {
+        return data;
+    }
 
     public void floodFill(Coordinate start, Predicate<Coordinate> isBoundary, T fillType) {
         Queue<Coordinate> toFill = new ArrayDeque<>();
@@ -61,31 +65,27 @@ public class Matrix<T> {
             Coordinate current = toFill.poll();
             if(!visited.contains(current) && Boolean.FALSE.equals(isBoundary.test(current))) {
                 data[current.x()][current.y()] = fillType;
+
                 visited.add(current);
-                for(int i = -1; i<2; i++ ){
-                    for(int j = -1; j<2; j++) {
-                        Coordinate future = new Coordinate(current.x()+i, current.y()+j);
-                        if(isLegalCoordinate(future)) {
-                            toFill.add(future);
-                        }
-                    }
-                }
+
+                toFill.addAll(findAllSurrounding(current)
+                        .filter(Predicate.not(visited::contains))
+                        .toList()
+                );
             }
         }
     }
 
-    public T[][] getData() {
-        return data;
+    public Stream<Coordinate> findAllSurrounding(Coordinate c) {
+        return c.getAllSurrounding(c)
+                .stream()
+                .filter(this::isLegalCoordinate);
     }
+
 
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();
-        result.append("   ");
-        for(int j = 0; j<xLength(); j++) {
-            result.append(j).append(" ");
-        }
-        result.append("\n");
 
         for(int i = 0; i <yLength(); i++) {
             StringBuilder xResult = new StringBuilder();

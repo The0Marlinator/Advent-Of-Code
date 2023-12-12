@@ -22,7 +22,7 @@ public class Solution202310 extends AOCSolution {
         List<List<PipeType>> mapData = parsedInput.stream()
                 .map(StringUtils::splitIntoCharacters)
                 .map(StringUtils.CharacterWrapper::characters)
-                .map(c -> c.map(this::classifyLocation))
+                .map(c -> c.map(PipeType::of))
                 .map(Stream::toList)
                 .toList();
 
@@ -42,7 +42,7 @@ public class Solution202310 extends AOCSolution {
         List<List<PipeType>> mapData = parsedInput.stream()
                 .map(StringUtils::splitIntoCharacters)
                 .map(StringUtils.CharacterWrapper::characters)
-                .map(c -> c.map(this::classifyLocation))
+                .map(c -> c.map(PipeType::of))
                 .map(Stream::toList)
                 .toList();
 
@@ -95,7 +95,7 @@ public class Solution202310 extends AOCSolution {
         Matrix<PipeType> newMap = new Matrix<>(d);
         for (int i = 0; i < path.size() - 1; i++) {
             newMap.setValue(path.get(i), PipeType.PATH);
-            Pair<Coordinate, Coordinate> check = getCoordinateToLeft(finalPath, i);
+            Pair<Coordinate, Coordinate> check = getCoordinateToLeftAndStraightAhead(finalPath, i);
 
             if (map.isLegalCoordinate(check.first())) {
                 newMap.floodFill(check.first(), path::contains, PipeType.INNER);
@@ -107,11 +107,11 @@ public class Solution202310 extends AOCSolution {
         return newMap.findAll(PipeType.INNER);
     }
 
-    private Pair<Coordinate, Coordinate> getCoordinateToLeft(List<Coordinate> wayTostart, int i) {
+    private Pair<Coordinate, Coordinate> getCoordinateToLeftAndStraightAhead(List<Coordinate> wayTostart, int i) {
         Coordinate current = wayTostart.get(i);
         Coordinate next = wayTostart.get(i + 1);
         Coordinate left;
-        Coordinate straight = null;
+        Coordinate straight;
         if (next.x() < current.x()) {
             left = new Coordinate(current.x(), current.y() - 1);
             straight = new Coordinate(next.x(), next.y() - 1);
@@ -200,34 +200,24 @@ public class Solution202310 extends AOCSolution {
         };
     }
 
-    private PipeType classifyLocation(char s) {
-        return switch (s) {
-            case '|' -> PipeType.VERTICAL_BEND;
-            case '-' -> PipeType.HORIZONTAL_PIPE;
-            case 'L' -> PipeType.L_BEND;
-            case 'J' -> PipeType.J_BEND;
-            case '7' -> PipeType.SEVEN_BEND;
-            case 'F' -> PipeType.F_BEND;
-            case '.' -> PipeType.GROUND;
-            case 'S' -> PipeType.STARTING_POSITION;
-            default -> PipeType.INVALID_CHARACTER;
-        };
-    }
 
     private enum PipeType {
         VERTICAL_BEND, HORIZONTAL_PIPE, L_BEND, J_BEND, SEVEN_BEND, F_BEND, GROUND, STARTING_POSITION, INVALID_CHARACTER, INNER, OUTER, PATH;
 
-        public boolean isVerticalSqueezable() {
-            return switch (this.ordinal()) {
-                case 0, 4, 5, 2, 3 -> true;
-                default -> false;
+
+        public static PipeType of(char s) {
+            return switch (s) {
+                case '|' -> PipeType.VERTICAL_BEND;
+                case '-' -> PipeType.HORIZONTAL_PIPE;
+                case 'L' -> PipeType.L_BEND;
+                case 'J' -> PipeType.J_BEND;
+                case '7' -> PipeType.SEVEN_BEND;
+                case 'F' -> PipeType.F_BEND;
+                case '.' -> PipeType.GROUND;
+                case 'S' -> PipeType.STARTING_POSITION;
+                default -> PipeType.INVALID_CHARACTER;
             };
         }
-
-        public boolean isHorizonticallySqueezable() {
-            return this.ordinal() == 1;
-        }
-
 
         @Override
         public String toString() {
