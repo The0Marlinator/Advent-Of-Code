@@ -89,6 +89,9 @@ public class Solution202311 extends AOCSolution {
 
         List<Coordinate> oldGalaxyLocations = new LinkedList<>(allGalaxies);
 
+        //We have to reduce numberToReplaceColumnWith with one in the following code because
+        //we are replacing a column with numberToReplaceColumnWith ones. This means adding numberToReplaceColumnWith-1
+        //to the total number
         for (Integer emptyRow : emptyRows) {
             List<Coordinate> newGalaxyLocations = new LinkedList<>();
             for (int j = 0; j < oldGalaxyLocations.size(); j++) {
