@@ -39,9 +39,6 @@ public class DaySolutionProcessor extends AbstractProcessor {
         if (generated) {
             return true;
         }
-        for (var element : roundEnv.getElementsAnnotatedWith(Solution.class)) {
-            processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, "Found annotated class: " + element.getSimpleName());
-        }
         List<String> classNames = new ArrayList<>();
         for (var element : roundEnv.getElementsAnnotatedWith(Solution.class)) {
             if (element instanceof TypeElement typeElement) {

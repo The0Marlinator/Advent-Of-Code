@@ -26,12 +26,12 @@ public class CoordinateMap<T> extends CoordinateAddressable<T> {
 
     @Override
     public T get(Coordinate location) {
-        return data.get(location.x()).get(location.y());
+        return data.get((int) location.x()).get((int) location.y());
     }
 
     @Override
     public void set(Coordinate c, T value) {
-        data.get(c.x()).set(c.y(), value);
+        data.get((int) c.x()).set((int) c.y(), value);
     }
 
     public boolean isLegalCoordinate(Coordinate c) {
@@ -94,7 +94,7 @@ public class CoordinateMap<T> extends CoordinateAddressable<T> {
         toFill.add(start);
         while (!toFill.isEmpty()) {
             Coordinate current = toFill.poll();
-            if (!visited.contains(current) && Boolean.FALSE.equals(isBoundary.test(current))) {
+            if (!visited.contains(current) && Boolean.FALSE.equals(isBoundary.test(current)) && !get(current).equals(fillType)) {
                 set(current, fillType);
 
                 visited.add(current);

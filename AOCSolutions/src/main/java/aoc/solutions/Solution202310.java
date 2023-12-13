@@ -238,7 +238,7 @@ public class Solution202310 extends AOCSolution {
     private record StackFrame(Coordinate startingNode, Coordinate Source, List<Coordinate> history) {
     }
 
-    private class FilterWindow {
+    private static class FilterWindow {
 
         private final CoordinateMap<PipeType> map;
         private final List<Coordinate> path;

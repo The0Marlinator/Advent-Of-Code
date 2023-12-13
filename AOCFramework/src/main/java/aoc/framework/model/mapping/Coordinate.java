@@ -3,7 +3,7 @@ package aoc.framework.model.mapping;
 import java.util.LinkedList;
 import java.util.List;
 
-public record Coordinate(int x, int y) {
+public record Coordinate(long x, long y) {
 
     public boolean isAbove(Coordinate other) {
         return y < other.y;
@@ -50,7 +50,7 @@ public record Coordinate(int x, int y) {
         return result;
     }
 
-    public int manhattanDistance(Coordinate other) {
+    public long manhattanDistance(Coordinate other) {
         return Math.abs(x-other.x) + Math.abs(y-other.y);
     }
 }
