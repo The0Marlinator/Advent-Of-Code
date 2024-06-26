@@ -64,6 +64,10 @@ public class Solution202310 extends AOCSolution {
                 .history();
 
         return String.format("Solution 1: %s , Solution 2 (reversed path): %s", findInnerPoints(wayTostart, false).size(), findInnerPoints(wayTostart, true).size());
+
+        //FilterWindow filterWindow = new FilterWindow(map, wayTostart);
+
+        //return "" + map.pathTrace(filterWindow::isVerticalWall, filterWindow::isHorizontalWall, filterWindow::ignore,PipeType.INNER).size();
     }
 
 
@@ -184,6 +188,19 @@ public class Solution202310 extends AOCSolution {
     private enum PipeType {
         VERTICAL_BEND, HORIZONTAL_PIPE, L_BEND, J_BEND, SEVEN_BEND, F_BEND, GROUND, STARTING_POSITION, INVALID_CHARACTER, INNER, OUTER, PATH;
 
+        public boolean isVertical() {
+            return switch (this) {
+                case F_BEND, J_BEND, SEVEN_BEND, L_BEND, VERTICAL_BEND, STARTING_POSITION -> true;
+                default -> false;
+            };
+        }
+        public boolean isHorizontal() {
+            return switch (this) {
+                case F_BEND, J_BEND, SEVEN_BEND, L_BEND, HORIZONTAL_PIPE, STARTING_POSITION -> true;
+                default -> false;
+            };
+        }
+
         public static PipeType of(char s) {
             return switch (s) {
                 case '|' -> PipeType.VERTICAL_BEND;
@@ -219,6 +236,31 @@ public class Solution202310 extends AOCSolution {
 
 
     private record StackFrame(Coordinate startingNode, Coordinate Source, List<Coordinate> history) {
+    }
+
+    private static class FilterWindow {
+
+        private final CoordinateMap<PipeType> map;
+        private final List<Coordinate> path;
+
+        private FilterWindow(CoordinateMap<PipeType> map, List<Coordinate> path) {
+            this.path = path;
+            this.map = map;
+        }
+
+        public boolean isVerticalWall(Coordinate coordinate) {
+            return (map.get(coordinate).isVertical() && path.contains(coordinate));
+        }
+
+        public boolean isHorizontalWall(Coordinate coordinate) {
+            return (map.get(coordinate).isHorizontal() && path.contains(coordinate));
+        }
+
+        public boolean ignore(Coordinate coordinate) {
+            return path.contains(coordinate);
+
+        }
+
     }
 
 }

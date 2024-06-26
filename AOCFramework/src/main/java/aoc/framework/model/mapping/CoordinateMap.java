@@ -48,6 +48,46 @@ public class CoordinateMap<T> extends CoordinateAddressable<T> {
         return data.getFirst().size();
     }
 
+    @Override
+    public void insertRow(int y, T value) {
+        for(int x = 0; x<xLength(); x++) {
+            data.get(x).add(y, value);
+        }
+    }
+
+    @Override
+    public void insertColumn(int x, T value) {
+        List<T> newRow = new LinkedList<>();
+        for(int i = 0; i<yLength(); i++) {
+            newRow.add(value);
+        }
+        data.add(x, newRow);
+    }
+
+    public Set<Coordinate> pathTrace(Predicate<Coordinate> isVerticalBoundary, Predicate<Coordinate> shouldIgnore) throws AOCException {
+        Set<Coordinate> resultBredth = new HashSet<>();
+        for (int y = 0; y < yLength(); y++) {
+            boolean isInsideBoundary = false;
+            Coordinate current = null;
+            for (int x = 0; x < xLength(); x++) {
+                current = new Coordinate(x, y);
+                boolean isBoundaryConditionMet = isVerticalBoundary.test(current);
+                if (isBoundaryConditionMet && isInsideBoundary) {
+                    isInsideBoundary = false;
+                } else if (isBoundaryConditionMet) {
+                    isInsideBoundary = true;
+                } else if (isInsideBoundary && !shouldIgnore.test(current)) {
+                    resultBredth.add(current);
+                }
+            }
+            if (isInsideBoundary) {
+                throw new AOCException("PathTrace expected to be done reading but is still inside the boundary at the end of the map");
+            }
+        }
+
+        return resultBredth;
+    }
+
     public void floodFill(Coordinate start, Predicate<Coordinate> isBoundary, T fillType) {
         Queue<Coordinate> toFill = new ArrayDeque<>();
         Set<Coordinate> visited = new HashSet<>();
@@ -98,4 +138,6 @@ public class CoordinateMap<T> extends CoordinateAddressable<T> {
         }
         return result.toString();
     }
+
+
 }

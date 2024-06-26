@@ -14,4 +14,27 @@ public final class CollectionUitls {
         return result;
     }
 
+    public static <T> List<Integer> findIndexOfAll(List<T> list, T value) {
+        List<Integer> result = new LinkedList<>();
+
+        for(int i = 0; i<list.size(); i++) {
+            if (list.get(i).equals(value)) {
+                result.add(i);
+            }
+        }
+        return result;
+    }
+
+    public static <T> List<T> replaceIndexInListAsNewList(List<T> list, int index, T value) {
+        List<T> result = new LinkedList<>(list);
+        result.set(index, value);
+        return result;
+    }
+
+    public static <T> Set<T> addToSet(T value, Set<T> set) {
+        Set<T> result = new HashSet<>();
+        result.add(value);
+        result.addAll(set);
+        return result;
+    }
 }
