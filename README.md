@@ -9,6 +9,8 @@ To add a new solution, create a new Solution class in the AOCSOlutions Module th
 
 It should also take a boolean if it can print to ouptut. This is just pushed to the super (Day) class which provides the method PrintToOutput(String) which provides easy printing of strings.
 
+There is an example solution for 2023-10 in the solutions mdoule
+
 ```java 
 @Solution(year = 2023, day = 9)
 public class Solution202309 extends AOCSolution {
