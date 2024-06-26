@@ -1,4 +1,4 @@
-# My solutions to Advent Of Code
+# Solutions to Advent of Code
 
 Note the actual Solutions are in the AOC Solutions Module (They are annotatedn with the Year and day)
 
@@ -8,6 +8,8 @@ The rest is "Framework Code" and a runner which uses the annotations to dtermine
 To add a new solution, create a new Solution class in the AOCSOlutions Module that Extends they Day abstract class and add the DaySolution Annotation as show below.
 
 It should also take a boolean if it can print to ouptut. This is just pushed to the super (Day) class which provides the method PrintToOutput(String) which provides easy printing of strings.
+
+There is an example solution for 2023-10 in the solutions mdoule
 
 ```java 
 @Solution(year = 2023, day = 9)
@@ -33,7 +35,4 @@ To run this an environmental variable (AOC_TOKEN) needs to be provided which con
 This will use the day and year values configured in the annotation for the class.
 
 This is to remove the need on input files whihc will need to be packaged and refered to. The Solution constructor simply quesries the data for us when running.
-
-## Actions
-There is an action in this repository which will cause github to run and build this project on a push or merge.
 
