@@ -1,4 +1,4 @@
-# My solutions to Advent Of Code
+# Solutions to Advent of Code
 
 Note the actual Solutions are in the AOC Solutions Module (They are annotatedn with the Year and day)
 
@@ -33,7 +33,4 @@ To run this an environmental variable (AOC_TOKEN) needs to be provided which con
 This will use the day and year values configured in the annotation for the class.
 
 This is to remove the need on input files whihc will need to be packaged and refered to. The Solution constructor simply quesries the data for us when running.
-
-## Actions
-There is an action in this repository which will cause github to run and build this project on a push or merge.
 
