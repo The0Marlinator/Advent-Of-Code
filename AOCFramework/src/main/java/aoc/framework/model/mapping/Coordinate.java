@@ -49,8 +49,4 @@ public record Coordinate(long x, long y) {
         }
         return result;
     }
-
-    public long manhattanDistance(Coordinate other) {
-        return Math.abs(x-other.x) + Math.abs(y-other.y);
-    }
 }

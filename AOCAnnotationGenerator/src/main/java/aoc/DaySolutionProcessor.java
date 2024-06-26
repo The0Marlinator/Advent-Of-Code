@@ -55,18 +55,23 @@ public class DaySolutionProcessor extends AbstractProcessor {
 
     private void generateDaySolutionFactory(List<String> classNames) {
         MethodSpec.Builder methodBuilder = MethodSpec.methodBuilder("createDaySolutions")
-                .returns(ParameterizedTypeName.get(ClassName.get(List.class),
-                        WildcardTypeName.subtypeOf(AOCSolution.class)))
+                .returns(
+                        ParameterizedTypeName.get(
+                                ClassName.get(List.class),
+                                        ParameterizedTypeName.get(ClassName.get(Class.class), WildcardTypeName.subtypeOf(AOCSolution.class))
+                    )
+                )
                 .addModifiers(javax.lang.model.element.Modifier.PUBLIC, javax.lang.model.element.Modifier.STATIC);
 
 
         methodBuilder.addStatement("$T result = new $T<>()",
                 ParameterizedTypeName.get(ClassName.get(List.class),
-                        TypeName.get(AOCSolution.class)),
+                        ParameterizedTypeName.get(ClassName.get(Class.class), WildcardTypeName.subtypeOf(AOCSolution.class))
+                ),
                 ArrayList.class);
 
         for (String className : classNames) {
-            methodBuilder.addStatement("result.add(new $T(false))", ClassName.bestGuess(className));
+            methodBuilder.addStatement("result.add($T.class)", ClassName.bestGuess(className));
         }
 
         methodBuilder.addStatement("return result");

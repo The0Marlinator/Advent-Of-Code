@@ -18,19 +18,19 @@ public abstract class AOCSolution {
         this.parsedInput = input;
     }
 
-    protected AOCSolution(boolean printOutput) {
+    protected AOCSolution(boolean printOutput) throws ExceptionInInitializerError {
         this.printOutput = printOutput;
         Solution annotation = this.getClass().getAnnotation(Solution.class);
 
         if (annotation == null) {
-            throw new RuntimeException("Unable to instantiate a solution as the Solution annotation could not be found. Unbale to get Day and Year of the solution and cannot retrieve inout data because of that");
+            throw new ExceptionInInitializerError("Unable to instantiate a solution as the Solution annotation could not be found. Unbale to get Day and Year of the solution and cannot retrieve inout data because of that");
         }
 
         try {
             String input = AocUtil.getInputFileFromRemote(annotation.day(), annotation.year());
             parsedInput = StringUtils.splitStringAroundNewLine(input).asList();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new ExceptionInInitializerError(e);
         }
 
     }
